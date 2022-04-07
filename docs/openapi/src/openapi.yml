@@ -1,0 +1,39 @@
+openapi: "3.0.1"
+info:
+  description: "DANCHiサイト用のWebAPI"
+  version: "1.0.0"
+  title: ${self:custom.apigateway.name}
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+tags:
+  - name: musics
+
+# servers:
+#   - url: "https://9kch38y2h4.execute-api.ap-northeast-1.amazonaws.com/{basePath}"
+#   variables:
+#     basePath:
+#       default: "/prd"
+paths:
+  /v1/musics:
+    $ref: "./paths/v1_musics.yml"
+
+components:
+
+  ##
+  ## schemas
+  ##
+  schemas:
+    ## request model
+    ## response model                 
+    standardResponseModel:
+      $ref: "./schemas/standardResponseModel.yml"     
+  
+  ##
+  ## securytyShemes
+  ##
+  securitySchemes:
+    apiKey:
+      $ref: "./securitySchemes/apiKey.yml"
+    lambdaAuthorizer:
+      $ref: "./securitySchemes/lambdaAuthorizer.yml"

@@ -1,0 +1,37 @@
+export:
+  Resources:
+    # #=====================================#
+    # ## Slack Chatbot設定(情報通知チャンネル)
+    # #=====================================#
+    # SlackInfoNoticeConfig:
+    #   Type: AWS::Chatbot::SlackChannelConfiguration
+    #   DependsOn:
+    #     - SlackChatbotRole
+    #     - SendErrorNoticeToSlackSNSTopic
+    #   Properties: 
+    #     ConfigurationName: ${self:custom.servicePrefix.Chatbot-Config}-SlackInfoNotice
+    #     IamRoleArn: !GetAtt SlackChatbotRole.Arn
+    #     # LoggingLevel: INFO
+    #     SlackChannelId: ${file(${self:custom.paths.envFile}):export.SLACK_INFO_CHANNEL_ID}
+    #     SlackWorkspaceId: ${file(${self:custom.paths.envFile}):export.SLACK_WORKSPACE_ID}
+    #     SnsTopicArns: 
+    #       - !Ref SendErrorNoticeToSlackSNSTopic
+
+    #=====================================#
+    ## Slack Chatbot設定(エラー通知チャンネル)
+    #=====================================#
+    SlackErrorNoticeConfig:
+      Type: AWS::Chatbot::SlackChannelConfiguration
+      DependsOn:
+        - SlackChatbotRole
+        - SendErrorNoticeToSlackSNSTopic
+      Properties: 
+        ConfigurationName: ${self:custom.servicePrefix.Chatbot-Config}-SlackErrorNotice
+        GuardrailPolicies:
+          - arn:aws:iam::aws:policy/CloudWatchLogsReadOnlyAccess
+        IamRoleArn: !GetAtt SlackChatbotRole.Arn
+        # LoggingLevel: INFO
+        SlackChannelId: ${file(${self:custom.paths.envFile}):export.SLACK_ERROR_CHANNEL_ID}
+        SlackWorkspaceId: ${file(${self:custom.paths.envFile}):export.SLACK_WORKSPACE_ID}
+        SnsTopicArns: 
+          - !Ref SendErrorNoticeToSlackSNSTopic

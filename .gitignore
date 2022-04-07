@@ -1,0 +1,17 @@
+# package directories
+node_modules
+jspm_packages
+
+# Serverless directories
+.serverless
+
+# Webpack directories
+.webpack
+
+# Environment variables directories
+.env
+
+# Lambda Layer directories
+LambdaLayer/nodejs.zip
+LambdaLayer/nodejs/*
+!LambdaLayer/nodejs/package.json

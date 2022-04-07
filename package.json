@@ -1,0 +1,38 @@
+{
+  "name": "danchi-api",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "test": "jest --config=./jest.config.js",
+    "test:clear": "jest --config=./jest.config.js --clearCache",
+    "common-deploy": "serverless deploy --config ./infra/stacks/common-stack/serverless.yml",
+    "function-deploy": "serverless deploy --config ./infra/stacks/function-stack/serverless.yml",
+    "monitor-deploy": "serverless deploy --config ./infra/stacks/monitor-stack/serverless.yml",
+    "common-remove": "serverless remove --config ./infra/stacks/common-stack/serverless.yml",
+    "function-remove": "serverless remove --config ./infra/stacks/function-stack/serverless.yml",
+    "monitor-remove": "serverless remove --config ./infra/stacks/monitor-stack/serverless.yml",
+    "doc:start": "ts-node bin/openapiUtil.ts start ./docker-compose.openapi.yml",
+    "doc:open": "ts-node bin/openapiUtil.ts open ./docker-compose.openapi.yml",
+    "doc:stop": "ts-node bin/openapiUtil.ts stop ./docker-compose.openapi.yml",
+    "doc:quit": "ts-node bin/openapiUtil.ts quit ./docker-compose.openapi.yml",
+    "readme:link": "doctoc README.md --github"
+  },
+  "devDependencies": {
+    "aws-sdk": "^2.817.0",
+    "@types/aws-lambda": "^8.10.17",
+    "@types/jest": "^27.0.2",
+    "@types/node": "^10.12.18",
+    "@types/serverless": "^1.78.35",
+    "fork-ts-checker-webpack-plugin": "^6.3.4",
+    "jest": "^27.2.1",
+    "serverless": "^2.60.0",
+    "serverless-webpack": "^5.5.4",
+    "ts-jest": "^27.0.5",
+    "ts-loader": "^9.2.6",
+    "ts-node": "^8.10.2",
+    "typescript": "^3.2.4",
+    "webpack": "^5.55.1",
+    "webpack-node-externals": "^1.7.2",
+    "microcms-js-sdk": "^2.0.0"
+  }
+}

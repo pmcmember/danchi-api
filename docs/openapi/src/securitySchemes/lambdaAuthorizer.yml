@@ -1,0 +1,16 @@
+type: apiKey
+name: Authorization
+in: header
+x-amazon-apigateway-authtype: "custom"
+x-amazon-apigateway-authorizer:
+  type: token
+  # identitySource: method.request.header.Authorization
+  authorizerUri:
+    Fn::Join:
+      - "/"
+      - - "arn:aws:apigateway:${self:provider.region}:lambda:path/2015-03-31/functions"  
+        -
+          Fn::GetAtt: LambdaAuthorizerLambdaFunction.Arn
+        - "invocations"
+  # 認証結果をキャッシュしない
+  authorizerResultTtlInSeconds: 0

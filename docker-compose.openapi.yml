@@ -1,0 +1,40 @@
+version: '3.3'
+
+services:
+
+  swagger-ui:
+    build: ./docker/openapi/swagger-ui
+    image: swagger-ui:ui-0.0.1
+    ports:
+      - "8002:8080"
+    volumes:
+      - ./docs/openapi/:/openapi/
+    environment:
+      SWAGGER_JSON: /openapi/dist/openapi.json
+
+  swagger-merger:
+    build: ./docker/openapi/swagger-merger
+    image: swagger-merger:merger-0.0.1
+    command: >
+     watch 'swagger-merger -c -i /openapi/src/openapi.yml -o /openapi/dist/openapi.json' /openapi/src/
+    volumes:
+      - ./docs/openapi:/openapi
+
+  # swagger-editor:
+  #   image: swaggerapi/swagger-editor
+  #   container_name: "swagger-editor"
+  #   ports:
+  #     - "8001:8080"
+  #   volumes:
+  #     - ./docs/openapi/resources/:/usr/share/nginx/html/openapi/
+  #   environment:
+  #     SWAGGER_FILE: /usr/share/nginx/html/openapi/openapi.yml
+
+  # swagger-api:
+  #   image: stoplight/prism:3
+  #   container_name: "swagger-api"
+  #   ports:
+  #     - "8003:4010"
+  #   command: mock -h 0.0.0.0 /openapi.yaml
+  #   volumes:
+  #     - ./stacks/function-stack/config/openapi.yml:/openapi.yaml

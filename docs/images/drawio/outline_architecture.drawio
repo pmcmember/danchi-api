@@ -1,0 +1,182 @@
+<mxfile host="65bd71144e">
+    <diagram id="IhXVrXrlbuBovZrWoXNJ" name="ページ1">
+        <mxGraphModel dx="161" dy="1534" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" background="none" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="94" value="" style="rounded=0;whiteSpace=wrap;html=1;fontColor=#FFFFFF;container=0;" parent="1" vertex="1">
+                    <mxGeometry x="60" y="-230" width="1360" height="810" as="geometry"/>
+                </mxCell>
+                <mxCell id="64" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;fontStyle=1" parent="1" vertex="1">
+                    <mxGeometry x="390" y="-168.4" width="750" height="668.4" as="geometry"/>
+                </mxCell>
+                <mxCell id="114" value="" style="group" parent="1" vertex="1" connectable="0">
+                    <mxGeometry x="400" y="90" width="270" height="380" as="geometry"/>
+                </mxCell>
+                <mxCell id="92" value="" style="rounded=0;whiteSpace=wrap;html=1;fontColor=#FFFFFF;" parent="114" vertex="1">
+                    <mxGeometry width="270" height="380" as="geometry"/>
+                </mxCell>
+                <mxCell id="21" value="API Gateway" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#FFFFFF;gradientColor=#FF4F8B;gradientDirection=north;fillColor=#BC1356;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.api_gateway;" parent="114" vertex="1">
+                    <mxGeometry x="109.5" y="38" width="54" height="54" as="geometry"/>
+                </mxCell>
+                <mxCell id="88" value="&lt;span style=&quot;font-size: 12px&quot;&gt;API Gateway Plan&lt;/span&gt;" style="endArrow=classic;html=1;labelPosition=right;verticalLabelPosition=middle;align=center;verticalAlign=middle;" parent="114" edge="1">
+                    <mxGeometry y="-60" width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="149.99999999999977" y="270" as="sourcePoint"/>
+                        <mxPoint x="150" y="110" as="targetPoint"/>
+                        <mxPoint y="1" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="89" value="&lt;span style=&quot;font-family: helvetica; font-size: 12px; font-style: normal; font-weight: 400; letter-spacing: normal; text-indent: 0px; text-transform: none; word-spacing: 0px; display: inline; float: none;&quot;&gt;鍵認証リクエスト&lt;br&gt;&lt;/span&gt;(X-Api-Key)" style="endArrow=classic;html=1;labelPosition=left;verticalLabelPosition=middle;align=center;verticalAlign=middle;labelBackgroundColor=none;fontColor=#000000;" parent="114" edge="1">
+                    <mxGeometry y="-60" width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="120" y="110" as="sourcePoint"/>
+                        <mxPoint x="119.99999999999977" y="270" as="targetPoint"/>
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="91" value="鍵内容に応じて&lt;span&gt;APIプランを選択。&lt;/span&gt;&lt;br&gt;&lt;div&gt;APIプランは主に&lt;span&gt;リクエスト制限などを定義&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontColor=#000000;align=left;" parent="114" vertex="1">
+                    <mxGeometry x="60" y="280" width="160.26" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="35" value="&lt;span style=&quot;font-size: 12px&quot;&gt;IAM Policy返却&lt;br&gt;(Allow / Deny)&lt;/span&gt;" style="endArrow=classic;html=1;labelPosition=right;verticalLabelPosition=middle;align=center;verticalAlign=middle;" parent="1" edge="1">
+                    <mxGeometry y="60" width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="550" y="-30" as="sourcePoint"/>
+                        <mxPoint x="550" y="110" as="targetPoint"/>
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="32" value="&lt;span style=&quot;font-family: &amp;#34;helvetica&amp;#34; ; font-size: 12px ; font-style: normal ; font-weight: 400 ; letter-spacing: normal ; text-indent: 0px ; text-transform: none ; word-spacing: 0px ; display: inline ; float: none&quot;&gt;鍵認証リクエスト&lt;br&gt;&lt;/span&gt;(Authorization)" style="endArrow=classic;html=1;labelPosition=left;verticalLabelPosition=middle;align=center;verticalAlign=middle;labelBackgroundColor=none;" parent="1" edge="1">
+                    <mxGeometry y="60" width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="520" y="110" as="sourcePoint"/>
+                        <mxPoint x="520" y="-30" as="targetPoint"/>
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="27" value="Authorizer" style="outlineConnect=0;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;shape=mxgraph.aws3.lambda_function;fillColor=#F58534;gradientColor=none;" parent="1" vertex="1">
+                    <mxGeometry x="516.5" y="-110" width="40" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="54" value="" style="endArrow=classic;html=1;labelBackgroundColor=none;fontColor=#FFFFFF;" parent="1" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="240" y="141" as="sourcePoint"/>
+                        <mxPoint x="490" y="141" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="55" value="Http Request" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontColor=#000000;" parent="54" vertex="1" connectable="0">
+                    <mxGeometry x="-0.0664" relative="1" as="geometry">
+                        <mxPoint x="-51" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="58" value="" style="endArrow=classic;html=1;labelBackgroundColor=none;fontColor=#FFFFFF;" parent="1" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="580" y="140" as="sourcePoint"/>
+                        <mxPoint x="840" y="140" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="59" value="Request(JSON)" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontColor=#000000;" parent="58" vertex="1" connectable="0">
+                    <mxGeometry x="-0.0664" relative="1" as="geometry">
+                        <mxPoint x="47" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="60" value="" style="endArrow=classic;html=1;labelBackgroundColor=none;fontColor=#FFFFFF;exitX=0.174;exitY=0.338;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="840.02" y="168.44000000000005" as="sourcePoint"/>
+                        <mxPoint x="580" y="168" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="61" value="Response(JSON)" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontColor=#000000;spacingLeft=7;" parent="60" vertex="1" connectable="0">
+                    <mxGeometry x="-0.0664" relative="1" as="geometry">
+                        <mxPoint x="25" y="-3" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="78" value="" style="endArrow=classic;html=1;labelBackgroundColor=none;fontColor=#FFFFFF;" parent="1" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="490" y="166" as="sourcePoint"/>
+                        <mxPoint x="240" y="166" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="79" value="Http Response" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontColor=#000000;spacingLeft=5;spacingRight=14;" parent="78" vertex="1" connectable="0">
+                    <mxGeometry x="-0.0664" relative="1" as="geometry">
+                        <mxPoint x="-58" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="63" value="&lt;font color=&quot;#000000&quot;&gt;AWS Any Service&lt;/font&gt;" style="ellipse;shape=cloud;whiteSpace=wrap;html=1;fontColor=#FFFFFF;" parent="1" vertex="1">
+                    <mxGeometry x="840" y="100" width="170" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="96" value="" style="endArrow=classic;html=1;" parent="1" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="970" y="210" as="sourcePoint"/>
+                        <mxPoint x="1028" y="340" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="97" value="Any Exception!!" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="96" vertex="1" connectable="0">
+                    <mxGeometry x="-0.3154" relative="1" as="geometry">
+                        <mxPoint y="9" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="101" style="edgeStyle=none;html=1;" parent="1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="1080" y="379.09" as="sourcePoint"/>
+                        <mxPoint x="1250" y="379" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="102" value="通知" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="101" vertex="1" connectable="0">
+                    <mxGeometry x="0.4768" relative="1" as="geometry">
+                        <mxPoint x="-26" y="1" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="99" value="Amazon SNS" style="outlineConnect=0;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;shape=mxgraph.aws3.sns;fillColor=#D9A741;gradientColor=none;" parent="1" vertex="1">
+                    <mxGeometry x="1000" y="350" width="56.63" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="103" value="CloudWatch" style="outlineConnect=0;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;shape=mxgraph.aws3.cloudwatch;fillColor=#759C3E;gradientColor=none;" parent="1" vertex="1">
+                    <mxGeometry x="780" y="349.99999999999994" width="65.81" height="66.8" as="geometry"/>
+                </mxCell>
+                <mxCell id="107" value="" style="endArrow=classic;html=1;" parent="1" target="63" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="820" y="340" as="sourcePoint"/>
+                        <mxPoint x="860" y="290" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="108" value="" style="endArrow=classic;html=1;entryX=0.741;entryY=0.289;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" target="92" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="780" y="340" as="sourcePoint"/>
+                        <mxPoint x="580" y="170" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="110" value="CloudWatch&lt;br&gt;アラーム" style="endArrow=classic;html=1;" parent="1" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="850" y="380" as="sourcePoint"/>
+                        <mxPoint x="980" y="380" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="112" value="監視" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+                    <mxGeometry x="767" y="300" width="60" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="115" value="" style="group;fontColor=#FFFFFF;" parent="1" vertex="1" connectable="0">
+                    <mxGeometry x="123.33333333333334" y="128" width="232.2222222222222" height="262" as="geometry"/>
+                </mxCell>
+                <mxCell id="82" value="Required Request Header" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#3D3D3D;strokeColor=#3D3D3D;strokeWidth=2;fontColor=#ffffff;" parent="115" vertex="1">
+                    <mxGeometry y="82" width="232.22222222222223" height="180" as="geometry"/>
+                </mxCell>
+                <mxCell id="83" value="Authorization&#10;　⇒認証鍵&#10;　　図中のAuthorizerに渡す" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;fontColor=#000000;" parent="82" vertex="1">
+                    <mxGeometry y="30" width="232.22222222222223" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="84" value="X-Api-Key&#10;　⇒認証鍵&#10;　　API Gatewayが鍵内容によって&#10;　　紐づいているPlanを使用する" style="text;strokeColor=default;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;fontColor=#000000;" parent="82" vertex="1">
+                    <mxGeometry y="100" width="232.22222222222223" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="19" value="yubiori-site" style="rounded=0;whiteSpace=wrap;html=1;" parent="115" vertex="1">
+                    <mxGeometry width="105.55555555555556" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="117" value="" style="outlineConnect=0;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;shape=mxgraph.aws3.cloud_2;fillColor=#F58534;gradientColor=none;" parent="1" vertex="1">
+                    <mxGeometry x="414" y="-190" width="50" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="120" value="" style="group" parent="1" vertex="1" connectable="0">
+                    <mxGeometry x="1265" y="350" width="90" height="96.80000000000001" as="geometry"/>
+                </mxCell>
+                <mxCell id="100" value="" style="shape=actor;whiteSpace=wrap;html=1;labelPosition=center;verticalLabelPosition=bottom;align=center;verticalAlign=top;" parent="120" vertex="1">
+                    <mxGeometry x="25" width="40" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="118" value="yubiori&lt;br&gt;メールアドレス" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontColor=#080808;" parent="120" vertex="1">
+                    <mxGeometry y="66.80000000000001" width="90" height="30" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

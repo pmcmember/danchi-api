@@ -1,0 +1,53 @@
+export:
+  Resources:
+    #=====================================#
+    ## Slack通知SNSトピック(エラー通知用)
+    #=====================================#
+    SendErrorNoticeToSlackSNSTopic:
+      Type: AWS::SNS::Topic
+      Properties:
+        TopicName: ${self:custom.servicePrefix.SNS-Topic}-SendErrorNoticeToSlack
+        DisplayName: ${self:custom.servicePrefix.SNS-Topic}-SendErrorNoticeToSlack
+        Subscription:
+          - Endpoint: https://global.sns-api.chatbot.amazonaws.com
+            Protocol: https
+        Tags:
+          - Key: Name
+            Value: ${self:custom.servicePrefix.SNS-Topic}-SendErrorNoticeToSlack
+          - Key: Project
+            Value: ${self:custom.project}
+          - Key: App
+            Value: ${self:app}
+          - Key: STAGE
+            Value: ${self:provider.stage}
+
+    #=====================================#
+    ## Eメール通知SNSトピック(エラー通知用)
+    #=====================================#
+    SendErrorNoticeToEmailSNSTopic:
+      Type: AWS::SNS::Topic
+      Properties:
+        TopicName: ${self:custom.servicePrefix.SNS-Topic}-SendErrorNoticeToEmail
+        DisplayName: ${self:custom.servicePrefix.SNS-Topic}-SendErrorNoticeToEmail
+        Subscription:
+          - Endpoint: ${file(${self:custom.paths.envFile}):export.SOURCE_ADDR}
+            Protocol: email
+        Tags:
+          - Key: Name
+            Value: ${self:custom.servicePrefix.SNS-Topic}-SendErrorNoticeToEmail
+          - Key: Project
+            Value: ${self:custom.project}
+          - Key: App
+            Value: ${self:app}
+          - Key: STAGE
+            Value: ${self:provider.stage}
+
+  Outputs:
+    SendErrorNoticeToSlackSNSTopicArn:
+      Value: !Ref SendErrorNoticeToSlackSNSTopic
+      Export:
+        Name: ${self:provider.stackName}-SendErrorNoticeToSlackSNSTopicArn
+    SendErrorNoticeToEmailSNSTopicArn:
+      Value: !Ref SendErrorNoticeToEmailSNSTopic
+      Export:
+        Name: ${self:provider.stackName}-SendErrorNoticeToEmailSNSTopicArn

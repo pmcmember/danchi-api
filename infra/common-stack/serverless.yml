@@ -1,0 +1,31 @@
+###
+## 用途: 当プロジェクト共通で使用するリソースのプロビジョニング
+## 
+## デプロイ手順:
+##   ${projectDir}> npm run common-stack [-- [--stage ${stage}] [--region ${region}]]
+##
+## ・${projectDir}はREADME.mdが配置してあるディレクトリとする 
+## ・${stage}には下記を指定(指定しない場合はdevとみなされる)
+##   開発環境デプロイの場合: dev
+##   本番環境デプロイの場合: prd
+##
+app: danchi-api
+service: ${self:app}-com
+projectDir: .
+frameworkVersion: '>=1.72.0'
+configValidationMode: error
+
+custom: ${file(${self:projectDir}/infra/stacks/custom.yml):export}
+
+provider:
+  name: aws
+  stage: ${opt:stage, self:custom.default.stage}
+  region: ${opt:region, self:custom.default.region}
+  profile: ${self:custom.default.profile}
+  stackName: ${self:custom.stacks.common-stack.name}
+
+resources:
+  - ${file(${self:custom.paths.stacks.common}/config/resources/SNS.yml):export}
+  - ${file(${self:custom.paths.stacks.common}/config/resources/IAM-Policy.yml):export}
+  - ${file(${self:custom.paths.stacks.common}/config/resources/IAM-Role.yml):export}
+  - ${file(${self:custom.paths.stacks.common}/config/resources/Chatbot.yml):export}

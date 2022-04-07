@@ -1,0 +1,165 @@
+export:
+  Parameters:
+    ContactHistoryDBName:
+      Type: String
+      Default: ${self:custom.dynamodb.tableNames.CONTACT_HISTORY_DB_NAME}
+    BookingHistoryDBName:
+      Type: String
+      Default: ${self:custom.dynamodb.tableNames.BOOKING_HISTORY_DB_NAME}
+    BanAddrsDBName:
+      Type: String
+      Default: ${self:custom.dynamodb.tableNames.BAN_ADDRS_DB_NAME}
+    SendNoticeHistoryDBName:
+      Type: String
+      Default: ${self:custom.dynamodb.tableNames.SEND_NOTICE_HISTORY_DB_NAME}
+  
+  Resources:
+    #=====================================#
+    ## 当アプリ所有全DynamoDB Table操作権限 
+    #=====================================#
+    OperationAllTableOwnedByAppPolicy:
+      Type: AWS::IAM::ManagedPolicy
+      Properties:
+        ManagedPolicyName: ${self:custom.servicePrefix.IAM-ManagedPolicy}-OperationAllTableOwnedByApp
+        PolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Sid: OperationAllTableOwnedByApp
+              Effect: Allow
+              Action:
+                - dynamodb:GetItem
+                - dynamodb:PutItem
+                - dynamodb:Query
+                - dynamodb:UpdateItem
+                - dynamodb:BatchGetItem
+                - dynamodb:BatchWriteItem
+              # 操作を許可するテーブルのARNを指定する
+              Resource: 
+                - !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${ContactHistoryDBName}"
+                - !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${BookingHistoryDBName}"
+                - !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${BanAddrsDBName}"
+                - !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${SendNoticeHistoryDBName}"
+              # Condition:
+              #   StringEquals:
+              #     aws:ResourceTag/App: ${self:app}
+    
+    #=====================================#
+    ## SendNoticeHistoryTable操作権限
+    #=====================================#
+    OperationSendNoticeHistoryTablePolicy:
+      Type: AWS::IAM::ManagedPolicy
+      Properties:
+        ManagedPolicyName: ${self:custom.servicePrefix.IAM-ManagedPolicy}-OperationSendNoticeHistoryTable
+        PolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Sid: OperationSendNoticeHistoryTable
+              Effect: Allow
+              Action:
+                - dynamodb:GetItem
+                - dynamodb:PutItem
+                - dynamodb:Query
+                - dynamodb:UpdateItem
+                - dynamodb:BatchGetItem
+                - dynamodb:BatchWriteItem
+              # 操作を許可するテーブルのARNを指定する
+              Resource: 
+                - !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${SendNoticeHistoryDBName}"
+    
+    #=====================================#
+    ## Email送信ポリシー
+    #=====================================#
+    SendEmailPolicy:
+      Type: AWS::IAM::ManagedPolicy
+      Properties:
+        ManagedPolicyName: ${self:custom.servicePrefix.IAM-ManagedPolicy}-SendEmail
+        PolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Sid: SendEmail
+              Effect: Allow
+              Action:
+                - ses:SendEmail
+                - ses:SendRawEmail
+              Resource: "*"
+              Condition: 
+                StringEquals: 
+                  ses:FromAddress: ${file(${self:custom.paths.envFile}):export.SOURCE_ADDR}
+    
+    #=====================================#
+    ## SNS通知ポリシー                  
+    #=====================================#
+    SendNoticePolicy:
+      Type: AWS::IAM::ManagedPolicy
+      DependsOn:
+        - SendErrorNoticeToEmailSNSTopic
+        - SendErrorNoticeToSlackSNSTopic
+      Properties:
+        ManagedPolicyName: ${self:custom.servicePrefix.IAM-ManagedPolicy}-SendNotice
+        PolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Sid: SendNoticeAllowPublish
+              Effect: Allow
+              Action:
+                - SNS:Publish
+              Resource:
+                - !Ref SendErrorNoticeToEmailSNSTopic
+                - !Ref SendErrorNoticeToSlackSNSTopic
+              Condition:
+                StringEquals:
+                  aws:PrincipalAccount: !Ref AWS::AccountId
+            - Sid: SendNoticeAllowEmailSubscribe
+              Effect: Allow
+              Action:
+                - SNS:Subscribe
+              Resource: "*"
+              Condition:
+                StringEquals:
+                  SNS:Protocol: email
+                  SNS:Endpoint: ${file(${self:custom.paths.envFile}):export.SOURCE_ADDR}
+            - Sid: SendNoticeAllowHttpsSubscribe
+              Effect: Allow
+              Action:
+                - SNS:Subscribe
+              Resource: "*"
+              Condition:
+                StringEquals:
+                  SNS:Protocol: https
+    
+    #=====================================#
+    ## ログ記載有効化ポリシー
+    #=====================================#
+    EnableWriteLogPolicy:
+      Type: AWS::IAM::ManagedPolicy
+      Properties:
+        ManagedPolicyName: ${self:custom.servicePrefix.IAM-ManagedPolicy}-EnableWriteLog
+        PolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Sid: EnableWriteLog
+              Effect: Allow
+              Action:
+                - logs:CreateLogStream
+                - logs:CreateLogGroup
+                - logs:PutLogEvents
+              Resource: "*"
+    
+    #=====================================#
+    ## lambda invokeポリシー
+    #=====================================#
+    LambdaInvokePolicy:
+      Type: AWS::IAM::ManagedPolicy
+      Properties:
+        ManagedPolicyName: ${self:custom.servicePrefix.IAM-ManagedPolicy}-LambdaInvoke
+        PolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Sid: LambdaInvoke
+              Effect: Allow
+              Action:
+                - "lambda:InvokeFunction"
+              Resource: "*"
+              # Condition: 
+              #   StringEquals: 
+              #     aws:ResourceTag/Project: ${self:custom.project}

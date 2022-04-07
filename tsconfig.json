@@ -1,0 +1,37 @@
+{
+  "compilerOptions": {
+    "lib": ["es2017"],
+    // "types": ["reflect-metadata"],
+    "removeComments": true,
+    "moduleResolution": "node",
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "sourceMap": true,
+    "strict": true,
+    "alwaysStrict": true,
+    "target": "es2017",
+    "outDir": "lib",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@root/*": ["./*"]
+    },
+    "esModuleInterop": true,
+    "baseUrl": "./",
+    // decoratorの警告を消す
+    "experimentalDecorators": true
+  },
+  "include": [
+    "./**/*.ts",
+    "./**/*.json",
+    "./**/*.yml",
+    "./**/*.yaml",
+    "./**/*.txt"
+  ],
+  "exclude": [
+    "node_modules/**/*",
+    ".serverless/**/*",
+    ".webpack/**/*",
+    "_warmup/**/*",
+    ".vscode/**/*"
+  ]
+}

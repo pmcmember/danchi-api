@@ -1,0 +1,127 @@
+export:
+  project: danchi
+  default:
+    stage: dev
+    region: ap-northeast-1
+    profile: sls
+  # API version(バージョン変更の際は下記を変更)
+  apigateway:
+    version:
+      sendEmail: v1
+      healthCheck: v1
+      livePlan: v1
+    name: ${self:custom.servicePrefix.APIGateway}-API
+  servicePrefix:
+    common:
+      commonPrefix: ${self:app}-${self:provider.stage}
+      APIGateway: ${self:custom.servicePrefix.common.commonPrefix}-ApiGW
+      CloudWatch: ${self:custom.servicePrefix.common.commonPrefix}-CW
+      DynamoDB: ${self:custom.servicePrefix.common.commonPrefix}-DynamoDB
+      IAM: ${self:custom.servicePrefix.common.commonPrefix}-
+      Lambda: ${self:custom.servicePrefix.common.commonPrefix}-Lambda
+      SNS: ${self:custom.servicePrefix.common.commonPrefix}-SNS
+      S3: ${self:custom.servicePrefix.common.commonPrefix}-S3
+      CloudFormation: ${self:custom.servicePrefix.common.commonPrefix}-Cfn
+      Chatbot: ${self:custom.servicePrefix.common.commonPrefix}-Chatbot
+    APIGateway: ${self:custom.servicePrefix.common.APIGateway}
+    APIGateway-APIKey: ${self:custom.servicePrefix.common.APIGateway}Key
+    APIGateway-Model: ${self:custom.servicePrefix.common.APIGateway}Model
+    CloudWatch-Alarm: ${self:custom.servicePrefix.common.CloudWatch}Alarm
+    CloudWatch-Log: ${self:custom.servicePrefix.common.CloudWatch}Log
+    CloudWatch-Event: ${self:custom.servicePrefix.common.CloudWatch}Event
+    CloudWatch-Metric: ${self:custom.servicePrefix.common.CloudWatch}Metric
+    DynamoDB: ${self:custom.servicePrefix.common.DynamoDB}
+    IAM-ManagedPolicy: ${self:custom.servicePrefix.common.IAM}MPolicy
+    IAM-Policy: ${self:custom.servicePrefix.common.IAM}Policy
+    IAM-Role: ${self:custom.servicePrefix.common.IAM}Role
+    IAM-User: ${self:custom.servicePrefix.common.IAM}User
+    IAM-Group: ${self:custom.servicePrefix.common.IAM}Group
+    Lambda: ${self:custom.servicePrefix.common.Lambda}
+    Lambda-Layer: ${self:custom.servicePrefix.common.Lambda}Lyr
+    SNS-Topic: ${self:custom.servicePrefix.common.SNS}Topic
+    S3Bucket: ${self:custom.servicePrefix.common.S3}Bucket
+    CloudFormation-Stack: ${self:custom.servicePrefix.common.CloudFormation}Stack
+    Chatbot-Config: ${self:custom.servicePrefix.common.Chatbot}Config
+
+  stacks:
+    common-stack:
+      name: ${self:custom.servicePrefix.CloudFormation-Stack}-CommonStack
+      path: ${self:custom.paths.stacks.common}
+    function-stack:
+      name: ${self:custom.servicePrefix.CloudFormation-Stack}-FunctionStack
+      path: ${self:custom.paths.stacks.function}
+    monitor-stack:
+      name: ${self:custom.servicePrefix.CloudFormation-Stack}-MonitorStack
+      path: ${self:custom.paths.stacks.monitor}
+  environmentSwitcher:
+    local-dev:
+      isEnabledApiKey: false
+      isEnabledSesEventDest: false
+      isEnabledAlarm: false
+    local-prd:
+      isEnabledApiKey: false
+      isEnabledSesEventDest: false
+      isEnabledAlarm: false
+    dev:
+      isEnabledApiKey: true
+      isEnabledSesEventDest: true
+      isEnabledAlarm: true
+    prd:
+      isEnabledApiKey: true
+      isEnabledSesEventDest: true
+      isEnabledAlarm: true
+      quotaLimit: 2000
+      quotaPeriod: MONTH
+  arn:
+    ErrorNoticeSNSTopic: 
+      Ref: ErrorNoticeSNSTopic
+    SendEmailRole:
+      Ref: SendEmailRole
+    HealthCheckRole:
+      Ref: HealthCheckRole
+  ses:
+    configSetNames:
+      error: ${self:app}-errorConfig-${self:provider.stage}
+  paths:
+    stacks:
+      common: ${self:custom.paths.stacks.base}/common-stack
+      function: ${self:custom.paths.stacks.base}/function-stack
+      monitor: ${self:custom.paths.stacks.base}/monitor-stack
+      base: ${self:projectDir}/infra/stacks
+    envFile: ${self:projectDir}/.env/${self:provider.stage}.yml
+    openapiFile: ${self:projectDir}/docs/openapi/dist/openapi.json
+    valid:
+      schema: ${self:projectDir}/schema.json
+    migrations: ${self:projectDir}/__test__/testUtilities/migrations
+  # serverless-webpackプラグインの設定
+  webpack:
+    webpackConfig: ${self:projectDir}/webpack.config.js
+    includeModules: true
+    excludeFiles: __test__/**/*.test.ts
+  # serverless-dynamodb-localプラグインの設定
+  dynamodb:
+    tableNames:
+      BOOKING_HISTORY_DB_NAME: ${file(${self:custom.paths.envFile}):export.BOOKING_HISTORY_DB_NAME}
+      CONTACT_HISTORY_DB_NAME: ${file(${self:custom.paths.envFile}):export.CONTACT_HISTORY_DB_NAME}
+      BAN_ADDRS_DB_NAME: ${file(${self:custom.paths.envFile}):export.BAN_ADDRS_DB_NAME}
+      SEND_NOTICE_HISTORY_DB_NAME: ${file(${self:custom.paths.envFile}):export.SEND_NOTICE_HISTORY_DB_NAME}
+    start:
+      port: "8000"
+      inMemory: true
+      migrate: true
+      seed: true
+    seed:
+      development:
+        sources:
+          - table: ${self:custom.dynamodb.tableNames.BOOKING_HISTORY_DB_NAME}
+            sources: 
+              - ${self:custom.paths.migrations}/bookingHistories1.json
+          - table: ${self:custom.dynamodb.tableNames.CONTACT_HISTORY_DB_NAME}
+            sources:
+              - ${self:custom.paths.migrations}/contactHistories1.json
+          - table: ${self:custom.dynamodb.tableNames.BAN_ADDRS_DB_NAME}
+            sources:
+              - ${self:custom.paths.migrations}/banAddrs1.json
+  s3:
+    names:
+      commonCfnBucket: sls-${self:app}-${self:provider.stage}-ServerlessDeploymentBucketName
