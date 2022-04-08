@@ -15,7 +15,9 @@
     "doc:open": "ts-node bin/openapiUtil.ts open ./docker-compose.openapi.yml",
     "doc:stop": "ts-node bin/openapiUtil.ts stop ./docker-compose.openapi.yml",
     "doc:quit": "ts-node bin/openapiUtil.ts quit ./docker-compose.openapi.yml",
-    "readme:link": "doctoc README.md --github"
+    "doc:restart": "npm run doc:stop && npm run doc:start",
+    "readme:link": "doctoc README.md --github",
+    "generate-json-schema": ""
   },
   "devDependencies": {
     "aws-sdk": "^2.817.0",

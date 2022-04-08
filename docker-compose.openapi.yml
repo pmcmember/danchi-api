@@ -10,15 +10,19 @@ services:
     volumes:
       - ./docs/openapi/:/openapi/
     environment:
-      SWAGGER_JSON: /openapi/dist/openapi.json
+      SWAGGER_JSON: /openapi/dist/v1/openapi.json
 
   swagger-merger:
     build: ./docker/openapi/swagger-merger
-    image: swagger-merger:merger-0.0.1
-    command: >
-     watch 'swagger-merger -c -i /openapi/src/openapi.yml -o /openapi/dist/openapi.json' /openapi/src/
+    image: swagger-merger:merger-0.0.4
     volumes:
-      - ./docs/openapi:/openapi
+      - ./:/project
+    working_dir: /project
+    command: >
+     sh -c '
+      watch "swagger-merger -c -i ./docs/openapi/src/v1/openapi.yml -o ./docs/openapi/dist/v1/openapi.json" ./docs/openapi/src/v1 &
+      sh ./docker/openapi/swagger-merger/generateJsonSchema.sh ./docs/openapi/src/v1
+     '
 
   # swagger-editor:
   #   image: swaggerapi/swagger-editor
