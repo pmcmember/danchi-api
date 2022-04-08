@@ -6,7 +6,7 @@ DANCHi公式ウェブサイトのWeb APIの定義<br>
 <!-- - サイトURL<br>
 https://yubiori-band.com -->
 - APIドキュメント<br>
-https://shigeyuki-nakano.github.io/danchi-api/openapi/v1
+https://shigeyuki-nakano.github.io/danchi-api/openapi
 
 主に以下を取り扱っています。
 - お問い合わせ機能
