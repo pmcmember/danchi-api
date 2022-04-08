@@ -1,0 +1,207 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "properties": {
+        "api": {
+            "type": "string"
+        },
+        "contents": {
+            "properties": {
+                "new": {
+                    "properties": {
+                        "draftKey": {
+                            "type": "string"
+                        },
+                        "draftValue": {
+                            "properties": {
+                                "iframeRaw": {
+                                    "type": "string"
+                                },
+                                "scApiUrl": {
+                                    "type": "string"
+                                },
+                                "scArtistHref": {
+                                    "type": "string"
+                                },
+                                "scArtistName": {
+                                    "type": "string"
+                                },
+                                "scSongHref": {
+                                    "type": "string"
+                                },
+                                "scSongTitle": {
+                                    "type": "string"
+                                },
+                                "scSrc": {
+                                    "type": "string"
+                                }
+                            },
+                            "required": [
+                                "iframeRaw"
+                            ],
+                            "type": "object"
+                        },
+                        "id": {
+                            "type": "string"
+                        },
+                        "publishValue": {
+                            "properties": {
+                                "iframeRaw": {
+                                    "type": "string"
+                                },
+                                "scApiUrl": {
+                                    "type": "string"
+                                },
+                                "scArtistHref": {
+                                    "type": "string"
+                                },
+                                "scArtistName": {
+                                    "type": "string"
+                                },
+                                "scSongHref": {
+                                    "type": "string"
+                                },
+                                "scSongTitle": {
+                                    "type": "string"
+                                },
+                                "scSrc": {
+                                    "type": "string"
+                                }
+                            },
+                            "required": [
+                                "iframeRaw"
+                            ],
+                            "type": "object"
+                        },
+                        "status": {
+                            "items": {
+                                "enum": [
+                                    "DRAFT",
+                                    "PUBLISH"
+                                ],
+                                "type": "string"
+                            },
+                            "type": "array"
+                        }
+                    },
+                    "required": [
+                        "draftKey",
+                        "draftValue",
+                        "id",
+                        "publishValue",
+                        "status"
+                    ],
+                    "type": "object"
+                },
+                "out": {
+                    "properties": {
+                        "draftKey": {
+                            "type": "string"
+                        },
+                        "draftValue": {
+                            "properties": {
+                                "iframeRaw": {
+                                    "type": "string"
+                                },
+                                "scApiUrl": {
+                                    "type": "string"
+                                },
+                                "scArtistHref": {
+                                    "type": "string"
+                                },
+                                "scArtistName": {
+                                    "type": "string"
+                                },
+                                "scSongHref": {
+                                    "type": "string"
+                                },
+                                "scSongTitle": {
+                                    "type": "string"
+                                },
+                                "scSrc": {
+                                    "type": "string"
+                                }
+                            },
+                            "required": [
+                                "iframeRaw"
+                            ],
+                            "type": "object"
+                        },
+                        "id": {
+                            "type": "string"
+                        },
+                        "publishValue": {
+                            "properties": {
+                                "iframeRaw": {
+                                    "type": "string"
+                                },
+                                "scApiUrl": {
+                                    "type": "string"
+                                },
+                                "scArtistHref": {
+                                    "type": "string"
+                                },
+                                "scArtistName": {
+                                    "type": "string"
+                                },
+                                "scSongHref": {
+                                    "type": "string"
+                                },
+                                "scSongTitle": {
+                                    "type": "string"
+                                },
+                                "scSrc": {
+                                    "type": "string"
+                                }
+                            },
+                            "required": [
+                                "iframeRaw"
+                            ],
+                            "type": "object"
+                        },
+                        "status": {
+                            "items": {
+                                "enum": [
+                                    "DRAFT",
+                                    "PUBLISH"
+                                ],
+                                "type": "string"
+                            },
+                            "type": "array"
+                        }
+                    },
+                    "required": [
+                        "draftKey",
+                        "draftValue",
+                        "id",
+                        "publishValue",
+                        "status"
+                    ],
+                    "type": "object"
+                }
+            },
+            "required": [
+                "new",
+                "out"
+            ],
+            "type": "object"
+        },
+        "id": {
+            "type": "string"
+        },
+        "service": {
+            "type": "string"
+        },
+        "type": {
+            "type": "string"
+        }
+    },
+    "required": [
+        "api",
+        "contents",
+        "id",
+        "service",
+        "type"
+    ],
+    "type": "object"
+}
+

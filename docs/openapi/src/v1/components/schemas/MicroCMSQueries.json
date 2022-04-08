@@ -1,0 +1,60 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "description": "microCMS queries\nhttps://document.microcms.io/content-api/get-list-contents#h9ce528688c\nhttps://document.microcms.io/content-api/get-content#h9ce528688c",
+    "properties": {
+        "depth": {
+            "enum": [
+                1,
+                2,
+                3
+            ],
+            "type": "number"
+        },
+        "draftKey": {
+            "type": "string"
+        },
+        "fields": {
+            "anyOf": [
+                {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                },
+                {
+                    "type": "string"
+                }
+            ]
+        },
+        "filters": {
+            "type": "string"
+        },
+        "ids": {
+            "anyOf": [
+                {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                },
+                {
+                    "type": "string"
+                }
+            ]
+        },
+        "limit": {
+            "type": "number"
+        },
+        "offset": {
+            "type": "number"
+        },
+        "orders": {
+            "type": "string"
+        },
+        "q": {
+            "type": "string"
+        }
+    },
+    "type": "object"
+}
+

@@ -1,0 +1,90 @@
+post:
+  summary: "Musics Iframe変換"
+  description: "SoundCloudから入手した生Iframe(共有タブに記載されているものそのまま)から情報を抜き取り、musics情報を更新する"
+  tags:
+    - musics
+  security:
+    - lambdaAuthorizer: []
+    - apiKey: []
+  x-amazon-apigateway-integration:
+    type: aws_proxy
+    credentials:
+      Fn::ImportValue: ${self:custom.stacks.common-stack.name}-APIGWStandardRoleArn
+    uri:
+      Fn::Join:
+        - "/"
+        - - "arn:aws:apigateway:${self:provider.region}:lambda:path/2015-03-31/functions"
+          -
+            Fn::GetAtt: MicroCMSKickLambdaFunction.Arn
+          - "invocations"
+    passthroughBehavior: "when_no_match"
+    httpMethod: "POST"
+    contentHandling: "CONVERT_TO_TEXT"
+  parameters:
+    - in: path
+      name: id
+      type: string
+      required: true
+      description: "BlogのIDを指定"
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: "../../../openapi.yml#/components/schemas/MusicsIframeConverterRequest"
+  responses:
+    200:
+      description: "成功時のレスポンス"
+      headers:
+        Access-Control-Allow-Origin:
+          schema:
+            type: "string"
+        Access-Control-Allow-Methods:
+          schema:
+            type: "string"
+        Access-Control-Allow-Headers:
+          schema:
+            type: "string"
+      content:
+        application/json:
+          schema:
+            $ref: "../../../openapi.yml#/components/schemas/StandardResponse"
+    500:
+      description: "サーバ異常終了時のレスポンス"
+      content:
+        application/json:
+          schema:
+            $ref: "../../../openapi.yml#/components/schemas/StandardResponse"
+options:
+  summary: "APIGateway上のCORS用設定"
+  description: "APIGateway上のCORS用設定"
+  tags:
+    - musics
+  responses:
+    200:
+      description: "200 response"
+      headers:
+        Access-Control-Allow-Origin:
+          schema:
+            type: "string"
+        Access-Control-Allow-Methods:
+          schema:
+            type: "string"
+        Access-Control-Allow-Headers:
+          schema:
+            type: "string"
+      content: {}
+  x-amazon-apigateway-integration:
+    responses:
+      default:
+        statusCode: "200"
+        responseParameters:
+          method.response.header.Access-Control-Allow-Methods: "'OPTIONS,GET'"
+          method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'"
+          method.response.header.Access-Control-Allow-Origin: "'${file(${self:custom.paths.envFile}):export.ALLOW_ORIGIN}'"
+        responseTemplates:
+          application/json: ""
+    requestTemplates:
+      application/json: "{statusCode:200}"
+    passthroughBehavior: "when_no_match"
+    contentHandling: "CONVERT_TO_TEXT"
+    type: "mock"

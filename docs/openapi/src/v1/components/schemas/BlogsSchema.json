@@ -1,0 +1,64 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "definitions": {
+        "MicroCMSImage": {
+            "description": "microCMS image",
+            "properties": {
+                "height": {
+                    "type": "number"
+                },
+                "url": {
+                    "type": "string"
+                },
+                "width": {
+                    "type": "number"
+                }
+            },
+            "required": [
+                "url"
+            ],
+            "type": "object"
+        }
+    },
+    "properties": {
+        "author": {
+            "items": {
+                "type": "string"
+            },
+            "type": "array"
+        },
+        "categories": {
+            "items": {
+                "type": "string"
+            },
+            "type": "array"
+        },
+        "content": {
+            "type": "string"
+        },
+        "description": {
+            "type": "string"
+        },
+        "image": {
+            "$ref": "#/definitions/MicroCMSImage"
+        },
+        "tags": {
+            "items": {
+                "type": "string"
+            },
+            "type": "array"
+        },
+        "title": {
+            "type": "string"
+        }
+    },
+    "required": [
+        "author",
+        "categories",
+        "content",
+        "description",
+        "title"
+    ],
+    "type": "object"
+}
+

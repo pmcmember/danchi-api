@@ -1,0 +1,95 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "allOf": [
+        {
+            "properties": {
+                "author": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                },
+                "categories": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                },
+                "content": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "image": {
+                    "$ref": "#/definitions/MicroCMSImage"
+                },
+                "tags": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                },
+                "title": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "author",
+                "categories",
+                "content",
+                "description",
+                "title"
+            ],
+            "type": "object"
+        },
+        {
+            "$ref": "#/definitions/MicroCMSDate"
+        }
+    ],
+    "definitions": {
+        "MicroCMSDate": {
+            "description": "microCMS content common date",
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "publishedAt": {
+                    "type": "string"
+                },
+                "revisedAt": {
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "createdAt",
+                "publishedAt",
+                "revisedAt",
+                "updatedAt"
+            ],
+            "type": "object"
+        },
+        "MicroCMSImage": {
+            "description": "microCMS image",
+            "properties": {
+                "height": {
+                    "type": "number"
+                },
+                "url": {
+                    "type": "string"
+                },
+                "width": {
+                    "type": "number"
+                }
+            },
+            "required": [
+                "url"
+            ],
+            "type": "object"
+        }
+    }
+}
+

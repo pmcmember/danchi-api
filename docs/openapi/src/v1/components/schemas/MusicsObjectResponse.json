@@ -1,0 +1,64 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "allOf": [
+        {
+            "properties": {
+                "iframeRaw": {
+                    "type": "string"
+                },
+                "scApiUrl": {
+                    "type": "string"
+                },
+                "scArtistHref": {
+                    "type": "string"
+                },
+                "scArtistName": {
+                    "type": "string"
+                },
+                "scSongHref": {
+                    "type": "string"
+                },
+                "scSongTitle": {
+                    "type": "string"
+                },
+                "scSrc": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "iframeRaw"
+            ],
+            "type": "object"
+        },
+        {
+            "$ref": "#/definitions/MicroCMSDate"
+        }
+    ],
+    "definitions": {
+        "MicroCMSDate": {
+            "description": "microCMS content common date",
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "publishedAt": {
+                    "type": "string"
+                },
+                "revisedAt": {
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "createdAt",
+                "publishedAt",
+                "revisedAt",
+                "updatedAt"
+            ],
+            "type": "object"
+        }
+    }
+}
+

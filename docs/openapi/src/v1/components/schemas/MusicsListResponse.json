@@ -1,0 +1,103 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "definitions": {
+        "MicroCMSContentId": {
+            "description": "microCMS contentId\nhttps://document.microcms.io/manual/content-id-setting",
+            "properties": {
+                "id": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "id"
+            ],
+            "type": "object"
+        },
+        "MicroCMSDate": {
+            "description": "microCMS content common date",
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "publishedAt": {
+                    "type": "string"
+                },
+                "revisedAt": {
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "createdAt",
+                "publishedAt",
+                "revisedAt",
+                "updatedAt"
+            ],
+            "type": "object"
+        }
+    },
+    "description": "microCMS list api Response",
+    "properties": {
+        "contents": {
+            "items": {
+                "allOf": [
+                    {
+                        "properties": {
+                            "iframeRaw": {
+                                "type": "string"
+                            },
+                            "scApiUrl": {
+                                "type": "string"
+                            },
+                            "scArtistHref": {
+                                "type": "string"
+                            },
+                            "scArtistName": {
+                                "type": "string"
+                            },
+                            "scSongHref": {
+                                "type": "string"
+                            },
+                            "scSongTitle": {
+                                "type": "string"
+                            },
+                            "scSrc": {
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "iframeRaw"
+                        ],
+                        "type": "object"
+                    },
+                    {
+                        "$ref": "#/definitions/MicroCMSContentId"
+                    },
+                    {
+                        "$ref": "#/definitions/MicroCMSDate"
+                    }
+                ]
+            },
+            "type": "array"
+        },
+        "limit": {
+            "type": "number"
+        },
+        "offset": {
+            "type": "number"
+        },
+        "totalCount": {
+            "type": "number"
+        }
+    },
+    "required": [
+        "contents",
+        "limit",
+        "offset",
+        "totalCount"
+    ],
+    "type": "object"
+}
+

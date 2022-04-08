@@ -1,0 +1,134 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "definitions": {
+        "MicroCMSContentId": {
+            "description": "microCMS contentId\nhttps://document.microcms.io/manual/content-id-setting",
+            "properties": {
+                "id": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "id"
+            ],
+            "type": "object"
+        },
+        "MicroCMSDate": {
+            "description": "microCMS content common date",
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "publishedAt": {
+                    "type": "string"
+                },
+                "revisedAt": {
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "createdAt",
+                "publishedAt",
+                "revisedAt",
+                "updatedAt"
+            ],
+            "type": "object"
+        },
+        "MicroCMSImage": {
+            "description": "microCMS image",
+            "properties": {
+                "height": {
+                    "type": "number"
+                },
+                "url": {
+                    "type": "string"
+                },
+                "width": {
+                    "type": "number"
+                }
+            },
+            "required": [
+                "url"
+            ],
+            "type": "object"
+        }
+    },
+    "description": "microCMS list api Response",
+    "properties": {
+        "contents": {
+            "items": {
+                "allOf": [
+                    {
+                        "properties": {
+                            "author": {
+                                "items": {
+                                    "type": "string"
+                                },
+                                "type": "array"
+                            },
+                            "categories": {
+                                "items": {
+                                    "type": "string"
+                                },
+                                "type": "array"
+                            },
+                            "content": {
+                                "type": "string"
+                            },
+                            "description": {
+                                "type": "string"
+                            },
+                            "image": {
+                                "$ref": "#/definitions/MicroCMSImage"
+                            },
+                            "tags": {
+                                "items": {
+                                    "type": "string"
+                                },
+                                "type": "array"
+                            },
+                            "title": {
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "author",
+                            "categories",
+                            "content",
+                            "description",
+                            "title"
+                        ],
+                        "type": "object"
+                    },
+                    {
+                        "$ref": "#/definitions/MicroCMSContentId"
+                    },
+                    {
+                        "$ref": "#/definitions/MicroCMSDate"
+                    }
+                ]
+            },
+            "type": "array"
+        },
+        "limit": {
+            "type": "number"
+        },
+        "offset": {
+            "type": "number"
+        },
+        "totalCount": {
+            "type": "number"
+        }
+    },
+    "required": [
+        "contents",
+        "limit",
+        "offset",
+        "totalCount"
+    ],
+    "type": "object"
+}
+

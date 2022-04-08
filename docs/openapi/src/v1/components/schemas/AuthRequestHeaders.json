@@ -1,0 +1,17 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "properties": {
+        "Authorization": {
+            "type": "string"
+        },
+        "X-Api-Key": {
+            "type": "string"
+        }
+    },
+    "required": [
+        "Authorization",
+        "X-Api-Key"
+    ],
+    "type": "object"
+}
+
