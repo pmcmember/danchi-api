@@ -20,8 +20,8 @@ services:
     working_dir: /project
     command: >
      sh -c '
-      watch "swagger-merger -c -i ./docs/openapi/src/v1/openapi.yml -o ./docs/openapi/dist/v1/openapi.json" ./docs/openapi/src/v1 &
-      sh ./docker/openapi/swagger-merger/generateJsonSchema.sh ./docs/openapi/src/v1
+      watch "swagger-merger -c -i ./docs/openapi/src/openapi.yml -o ./docs/openapi/dist/openapi.json" ./docs/openapi/src &
+      sh ./docker/openapi/swagger-merger/generateJsonSchema.sh ./docs/openapi/src
      '
 
   # swagger-editor:

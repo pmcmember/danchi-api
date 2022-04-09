@@ -5,19 +5,18 @@
   "scripts": {
     "test": "jest --config=./jest.config.js",
     "test:clear": "jest --config=./jest.config.js --clearCache",
-    "common-deploy": "serverless deploy --config ./infra/stacks/common-stack/serverless.yml",
-    "function-deploy": "serverless deploy --config ./infra/stacks/function-stack/serverless.yml",
-    "monitor-deploy": "serverless deploy --config ./infra/stacks/monitor-stack/serverless.yml",
-    "common-remove": "serverless remove --config ./infra/stacks/common-stack/serverless.yml",
-    "function-remove": "serverless remove --config ./infra/stacks/function-stack/serverless.yml",
-    "monitor-remove": "serverless remove --config ./infra/stacks/monitor-stack/serverless.yml",
+    "deploy:com": "serverless deploy --config ./infra/stacks/common-stack/serverless.yml",
+    "deploy:app": "serverless deploy --config ./infra/stacks/application-stack/serverless.yml",
+    "deploy:mnt": "serverless deploy --config ./infra/stacks/monitor-stack/serverless.yml",
+    "remove:com": "serverless remove --config ./infra/stacks/common-stack/serverless.yml",
+    "remove:app": "serverless remove --config ./infra/stacks/application-stack/serverless.yml",
+    "remove:mnt": "serverless remove --config ./infra/stacks/monitor-stack/serverless.yml",
     "doc:start": "ts-node bin/openapiUtil.ts start ./docker-compose.openapi.yml",
     "doc:open": "ts-node bin/openapiUtil.ts open ./docker-compose.openapi.yml",
     "doc:stop": "ts-node bin/openapiUtil.ts stop ./docker-compose.openapi.yml",
     "doc:quit": "ts-node bin/openapiUtil.ts quit ./docker-compose.openapi.yml",
     "doc:restart": "npm run doc:stop && npm run doc:start",
-    "readme:link": "doctoc README.md --github",
-    "generate-json-schema": ""
+    "readme:link": "doctoc README.md --github"
   },
   "devDependencies": {
     "aws-sdk": "^2.817.0",

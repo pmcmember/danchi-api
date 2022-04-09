@@ -80,7 +80,14 @@ yarn install
   
 
 ```
-npx serverless config credencial --key ${aws_access_key} --secret ${aws_secret_access_key} --profile sls
+aws_access_key_id="プロジェクト管理者から受け取る"
+aws_secret_access_key="プロジェクト管理者から受け取る"
+
+npx serverless config credentials \
+	--key ${aws_access_key} \
+	--secret ${aws_secret_access_key} \
+	--profile sls \
+	--provider aws
 ```
 <br>
 <br>
@@ -114,9 +121,9 @@ npx serverless config credencial --key ${aws_access_key} --secret ${aws_secret_a
 		<td>当プロジェクト共通で使用するリソースのプロビジョニング</td>
 	</tr>
 	<tr>
-		<td>関数スタック</td>
-		<td>danchi-api-${stage}-CfnStack-FunctionStack</td>
-		<td>ラムダ関数実行環境のプロビジョニング</td>
+		<td>アプリケーションスタック</td>
+		<td>danchi-api-${stage}-CfnStack-ApplicationStack</td>
+		<td>アプリケーション実行環境のプロビジョニング</td>
 	</tr>
 	<tr>
 		<td>監視スタック</td>
@@ -133,9 +140,9 @@ npx serverless config credencial --key ${aws_access_key} --secret ${aws_secret_a
 ```
 npm run common-deploy [-- [--stage ${stage}] [--region ${region}]]
 ```
-関数スタックのデプロイ
+アプリケーションスタックのデプロイ
 ```
-npm run function-deploy [-- [--stage ${stage}] [--region ${region}]]
+npm run application-deploy [-- [--stage ${stage}] [--region ${region}]]
 ```
 監視スタックのデプロイ
 ```
@@ -183,7 +190,7 @@ npm run monitor-deploy [-- [--stage ${stage}] [--region ${region}]]
 
 	<table>
 		<tr>
-			<th colspan="5">ファイルパス</th>
+			<th colspan="6">ファイルパス</th>
 			<th>説明</th>
 		</tr>
 		<tr>
@@ -191,6 +198,7 @@ npm run monitor-deploy [-- [--stage ${stage}] [--region ${region}]]
 			<td>openapi</td>
 			<td>src</td>
 			<td>openapi.yml</td>
+			<td></td>
 			<td></td>
 			<td>openapi定義の最親ファイル(各コンポーネントをこのファイルから呼び出す)</td>
 		</tr>
@@ -200,20 +208,32 @@ npm run monitor-deploy [-- [--stage ${stage}] [--region ${region}]]
 			<td>src</td>
 			<td>paths</td>
 			<td>*.yml</td>
+			<td></td>
 			<td>APIで利用可能なリクエスト・メソッドを定義するファイル</td>
 		</tr>
 		<tr>
 			<td>docs</td>
 			<td>openapi</td>
 			<td>src</td>
+			<td>components</td>
 			<td>schemas</td>
-			<td>*.yml</td>
-			<td>各種response/requestなどの構造を定義するファイル</td>
+			<td>*.ts</td>
+			<td>スキーマの型定義ファイル(書き込み用)</td>
 		</tr>
 		<tr>
 			<td>docs</td>
 			<td>openapi</td>
 			<td>src</td>
+			<td>components</td>
+			<td>schemas</td>
+			<td>*.json</td>
+			<td>スキーマの型定義ファイル(読み込み用)</td>
+		</tr>
+		<tr>
+			<td>docs</td>
+			<td>openapi</td>
+			<td>src</td>
+			<td>components</td>
 			<td>securitySchemes</td>
 			<td>*.yml</td>
 			<td>APIの認証設定を定義するファイル</td>
