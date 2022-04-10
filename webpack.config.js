@@ -21,7 +21,7 @@ module.exports = {
     descriptionFiles: ['package.json'],
     alias: {
       '@': path.resolve(__dirname, "src"),
-      '@root': path.resolve(__dirname)
+      '/': path.resolve(__dirname)
     }
   },
   output: {
