@@ -1,0 +1,21 @@
+export:
+  handler: src/handlers/iframeConverter.main
+  package:
+    include:
+      - iframeConverter.js
+  role: !ImportValue ${self:custom.stacks.common-stack.name}-IframeConverterLambdaRoleArn
+  environment:
+    ALLOW_ORIGIN: ${file(${self:custom.paths.envFile}):export.ALLOW_ORIGIN}
+    SEND_ERROR_NOTICE_SNS_TOPIC_ARN: !ImportValue ${self:custom.stacks.common-stack.name}-SendErrorNoticeToEmailSNSTopicArn
+    MICROCMS_API_KEY: ${file(${self:custom.paths.envFile}):export.MICROCMS_API_KEY}
+    MICROCMS_API_BASEURL: "https://danchi.microcms.io/api/v1"
+    MICROCMS_WEBHOOK_CONTENT_NAME: ${self:custom.dynamodb.tableNames.MICROCMS_WEBHOOK_CONTENT_NAME}
+    CONTACT_HISTORY_DB_NAME: ${self:custom.dynamodb.tableNames.CONTACT_HISTORY_DB_NAME}
+  name: ${self:custom.servicePrefix.Lambda}-iframeConverter
+  layers:
+    - !Ref CommonLayerLambdaLayer
+  tags:
+    Project: ${self:custom.project}
+    Name: ${self:functions.iframeConverter.name}
+    App: ${self:app}
+  memorySize: 512

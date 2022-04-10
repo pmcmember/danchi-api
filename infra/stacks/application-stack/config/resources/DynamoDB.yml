@@ -1,0 +1,76 @@
+export:
+  Resources:
+    #=====================================#
+    ## お問い合わせ履歴テーブル作成
+    #=====================================#
+    ContactHistoryTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.dynamodb.tableNames.CONTACT_HISTORY_DB_NAME}
+        BillingMode: PROVISIONED
+        ProvisionedThroughput:
+          ReadCapacityUnits: 2
+          WriteCapacityUnits: 2
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        Tags:
+          - Key: Name
+            Value: ${self:custom.dynamodb.tableNames.CONTACT_HISTORY_DB_NAME}
+          - Key: Project
+            Value: ${self:custom.project}
+          - Key: App
+            Value: ${self:app}
+          - Key: STAGE
+            Value: ${self:provider.stage}
+
+    #=====================================#
+    ## MicroCMS Webhookリクエスト内容確認用テーブル(無限ループ防止用)
+    #=====================================#
+    MicroCMSWebhookContentTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.dynamodb.tableNames.MICROCMS_WEBHOOK_CONTENT_NAME}
+        BillingMode: PROVISIONED
+        ProvisionedThroughput:
+          ReadCapacityUnits: 2
+          WriteCapacityUnits: 2
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        Tags:
+          - Key: Name
+            Value: ${self:custom.dynamodb.tableNames.MICROCMS_WEBHOOK_CONTENT_NAME}
+          - Key: Project
+            Value: ${self:custom.project}
+          - Key: App
+            Value: ${self:app}
+          - Key: STAGE
+            Value: ${self:provider.stage}
+
+  #=== Outputs ===#
+  Outputs:
+    ## Dynamodb Table Arn
+    ContactHistoryTableArn:
+      Value: !GetAtt ContactHistoryTable.Arn
+      Export:
+        Name: ${self:provider.stackName}-ContactHistoryTableArn
+    MicroCMSWebhookContentTableArn:
+      Value: !GetAtt MicroCMSWebhookContentTable.Arn
+      Export:
+        Name: ${self:provider.stackName}-MicroCMSWebhookContentTableArn
+    # Dynamodb Table Name
+    ContactHistoryTableName:
+      Value: !Ref ContactHistoryTable
+      Export:
+        Name: ${self:provider.stackName}-ContactHistoryTableName
+    MicroCMSWebhookContentTableName:
+      Value: !Ref MicroCMSWebhookContentTable
+      Export:
+        Name: ${self:provider.stackName}-MicroCMSWebhookContentTableName

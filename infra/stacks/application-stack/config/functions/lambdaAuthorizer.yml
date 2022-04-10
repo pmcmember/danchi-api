@@ -1,0 +1,13 @@
+export:
+  handler: src/handlers/lambdaAuthorizerHandler.main
+  package:
+    include:
+      - lambdaAuthorizerHandler.js
+  environment:
+    AUTHORIZATION_KEY: ${file(${self:custom.paths.envFile}):export.AUTHORIZATION_KEY}
+  name: ${self:custom.servicePrefix.Lambda}-lambdaAuthorizer
+  tags:
+    Project: ${self:custom.project}
+    Name: ${self:functions.lambdaAuthorizer.name}
+    App: ${self:app}
+  memorySize: 1024

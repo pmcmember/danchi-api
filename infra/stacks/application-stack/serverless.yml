@@ -1,0 +1,73 @@
+##
+## 用途: アプリケーション実行環境のプロビジョニング
+## 
+## デプロイ手順:
+## ${projectDir}> npm run application-stack [-- [--stage ${stage}] [--region ${region}]]
+## 
+## ・${projectDir}はREADME.mdが配置してあるディレクトリとする 
+## ・${stage}には下記を指定(指定しない場合はdevとみなされる)
+##   開発環境デプロイの場合: dev
+##   本番環境デプロイの場合: prd
+##
+app: danchi-api
+service: ${self:app}-app
+projectDir: .
+frameworkVersion: '>=1.72.0'
+configValidationMode: error
+
+custom: ${file(${self:projectDir}/infra/stacks/custom.yml):export}
+
+# 適用するプラグイン
+plugins:
+  - serverless-webpack
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  stage: ${opt:stage, self:custom.default.stage}
+  region: ${opt:region, self:custom.default.region}
+  profile: ${self:custom.default.profile}
+  stackName: ${self:custom.stacks.application-stack.name}
+  apiName: ${self:custom.apigateway.name}
+  tags:
+    Project: ${self:custom.project}
+    App: ${self:app}
+    Stage: ${self:provider.stage}
+  # s3:
+  #   EmailApiLayerBucket:
+  #     name: ${self:custom.servicePrefix.S3Bucket}-emailapi
+
+# S3バケットにデプロイするzipファイルに含めるファイル群を指定
+package:
+  individually: true
+  exclude:
+    - node_modules/**
+    - __test__/**
+    - .env/**
+    - bin/**
+    - LambdaLayer/**
+    - stacks/**
+    - vscode/**
+
+layers:
+  CommonLayer:
+    name: ${self:custom.servicePrefix.Lambda-Layer}-common
+    path: LambdaLayer
+
+functions:
+  #=====================================#
+  ## MicroCMSキック関数
+  #=====================================#
+  kickRequestToMicroCMS: ${file(${self:custom.paths.stacks.application}/config/functions/kickRequestToMicroCMS.yml):export}
+  #=====================================#
+  ## iframeから情報を抜き出しMicroCMSを更新する関数
+  #=====================================#
+  iframeConverter: ${file(${self:custom.paths.stacks.application}/config/functions/iframeConverter.yml):export}
+  #=====================================#
+  ## ラムダ認証
+  #=====================================#
+  lambdaAuthorizer: ${file(${self:custom.paths.stacks.application}/config/functions/lambdaAuthorizer.yml):export}
+resources:
+  - ${file(${self:custom.paths.stacks.application}/config/resources/APIGateway.yml):export}
+  - ${file(${self:custom.paths.stacks.application}/config/resources/LambdaPermission.yml):export}
+  - ${file(${self:custom.paths.stacks.application}/config/resources/DynamoDB.yml):export}

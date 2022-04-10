@@ -7,9 +7,8 @@ export:
   # API version(バージョン変更の際は下記を変更)
   apigateway:
     version:
-      sendEmail: v1
-      healthCheck: v1
-      livePlan: v1
+      musics: v1
+      blogs: v1
     name: ${self:custom.servicePrefix.APIGateway}-API
   servicePrefix:
     common:
@@ -47,21 +46,13 @@ export:
     common-stack:
       name: ${self:custom.servicePrefix.CloudFormation-Stack}-CommonStack
       path: ${self:custom.paths.stacks.common}
-    function-stack:
-      name: ${self:custom.servicePrefix.CloudFormation-Stack}-FunctionStack
-      path: ${self:custom.paths.stacks.function}
+    application-stack:
+      name: ${self:custom.servicePrefix.CloudFormation-Stack}-ApplicationStack
+      path: ${self:custom.paths.stacks.application}
     monitor-stack:
       name: ${self:custom.servicePrefix.CloudFormation-Stack}-MonitorStack
       path: ${self:custom.paths.stacks.monitor}
   environmentSwitcher:
-    local-dev:
-      isEnabledApiKey: false
-      isEnabledSesEventDest: false
-      isEnabledAlarm: false
-    local-prd:
-      isEnabledApiKey: false
-      isEnabledSesEventDest: false
-      isEnabledAlarm: false
     dev:
       isEnabledApiKey: true
       isEnabledSesEventDest: true
@@ -72,20 +63,13 @@ export:
       isEnabledAlarm: true
       quotaLimit: 2000
       quotaPeriod: MONTH
-  arn:
-    ErrorNoticeSNSTopic: 
-      Ref: ErrorNoticeSNSTopic
-    SendEmailRole:
-      Ref: SendEmailRole
-    HealthCheckRole:
-      Ref: HealthCheckRole
   ses:
     configSetNames:
       error: ${self:app}-errorConfig-${self:provider.stage}
   paths:
     stacks:
       common: ${self:custom.paths.stacks.base}/common-stack
-      function: ${self:custom.paths.stacks.base}/function-stack
+      application: ${self:custom.paths.stacks.base}/application-stack
       monitor: ${self:custom.paths.stacks.base}/monitor-stack
       base: ${self:projectDir}/infra/stacks
     envFile: ${self:projectDir}/.env/${self:provider.stage}.yml
@@ -101,27 +85,25 @@ export:
   # serverless-dynamodb-localプラグインの設定
   dynamodb:
     tableNames:
-      BOOKING_HISTORY_DB_NAME: ${file(${self:custom.paths.envFile}):export.BOOKING_HISTORY_DB_NAME}
       CONTACT_HISTORY_DB_NAME: ${file(${self:custom.paths.envFile}):export.CONTACT_HISTORY_DB_NAME}
-      BAN_ADDRS_DB_NAME: ${file(${self:custom.paths.envFile}):export.BAN_ADDRS_DB_NAME}
-      SEND_NOTICE_HISTORY_DB_NAME: ${file(${self:custom.paths.envFile}):export.SEND_NOTICE_HISTORY_DB_NAME}
-    start:
-      port: "8000"
-      inMemory: true
-      migrate: true
-      seed: true
-    seed:
-      development:
-        sources:
-          - table: ${self:custom.dynamodb.tableNames.BOOKING_HISTORY_DB_NAME}
-            sources: 
-              - ${self:custom.paths.migrations}/bookingHistories1.json
-          - table: ${self:custom.dynamodb.tableNames.CONTACT_HISTORY_DB_NAME}
-            sources:
-              - ${self:custom.paths.migrations}/contactHistories1.json
-          - table: ${self:custom.dynamodb.tableNames.BAN_ADDRS_DB_NAME}
-            sources:
-              - ${self:custom.paths.migrations}/banAddrs1.json
+      MICROCMS_WEBHOOK_CONTENT_NAME: ${file(${self:custom.paths.envFile}):export.MICROCMS_WEBHOOK_CONTENT_NAME}
+  #   start:
+  #     port: "8000"
+  #     inMemory: true
+  #     migrate: true
+  #     seed: true
+  #   seed:
+  #     development:
+  #       sources:
+  #         - table: ${self:custom.dynamodb.tableNames.BOOKING_HISTORY_DB_NAME}
+  #           sources: 
+  #             - ${self:custom.paths.migrations}/bookingHistories1.json
+  #         - table: ${self:custom.dynamodb.tableNames.CONTACT_HISTORY_DB_NAME}
+  #           sources:
+  #             - ${self:custom.paths.migrations}/contactHistories1.json
+  #         - table: ${self:custom.dynamodb.tableNames.BAN_ADDRS_DB_NAME}
+  #           sources:
+  #             - ${self:custom.paths.migrations}/banAddrs1.json
   s3:
     names:
       commonCfnBucket: sls-${self:app}-${self:provider.stage}-ServerlessDeploymentBucketName

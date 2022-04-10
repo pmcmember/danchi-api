@@ -1,0 +1,18 @@
+export:
+  handler: src/handlers/kickRequestToMicroCMS.main
+  package:
+    include:
+      - kickRequestToMicroCMS.js
+  role: !ImportValue ${self:custom.stacks.common-stack.name}-StandardLambdaRoleArn
+  environment:
+    ALLOW_ORIGIN: ${file(${self:custom.paths.envFile}):export.ALLOW_ORIGIN}
+    SEND_ERROR_NOTICE_SNS_TOPIC_ARN: !ImportValue ${self:custom.stacks.common-stack.name}-SendErrorNoticeToEmailSNSTopicArn
+    MICROCMS_API_KEY: 5dc14a680d444a75a88a6e6a563a434799f4
+  name: ${self:custom.servicePrefix.Lambda}-kickRequestToMicroCMS
+  layers:
+    - !Ref CommonLayerLambdaLayer
+  tags:
+    Project: ${self:custom.project}
+    Name: ${self:functions.kickRequestToMicroCMS.name}
+    App: ${self:app}
+  memorySize: 512

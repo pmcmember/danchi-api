@@ -1,0 +1,34 @@
+export:
+  Resources:
+    #=====================================#
+    ## APIGateway kickRequestToMicroCMS関数実行権限付与
+    #=====================================#
+    KickRequestToMicroCMSApiPermission:
+      Type: "AWS::Lambda::Permission"
+      Properties:
+        FunctionName: ${self:functions.kickRequestToMicroCMS.name}
+        Action: "lambda:InvokeFunction"
+        Principal: "apigateway.amazonaws.com"
+      DependsOn: KickRequestToMicroCMSLambdaFunction
+
+    #=====================================#
+    ## APIGateway iframeConverter関数実行権限付与
+    #=====================================#
+    IframeConverterApiPermission:
+      Type: "AWS::Lambda::Permission"
+      Properties:
+        FunctionName: ${self:functions.iframeConverter.name}
+        Action: "lambda:InvokeFunction"
+        Principal: "apigateway.amazonaws.com"
+      DependsOn: IframeConverterLambdaFunction
+
+    #=====================================#
+    ## APIGateway 認証用関数の実行権限付与
+    #=====================================#
+    LambdaAuthorizerApiPermission:
+      Type: "AWS::Lambda::Permission"
+      Properties:
+        FunctionName: ${self:functions.lambdaAuthorizer.name}
+        Action: "lambda:InvokeFunction"
+        Principal: "apigateway.amazonaws.com"
+      DependsOn: LambdaAuthorizerLambdaFunction

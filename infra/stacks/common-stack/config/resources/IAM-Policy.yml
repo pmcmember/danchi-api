@@ -1,17 +1,5 @@
 export:
-  Parameters:
-    ContactHistoryDBName:
-      Type: String
-      Default: ${self:custom.dynamodb.tableNames.CONTACT_HISTORY_DB_NAME}
-    BookingHistoryDBName:
-      Type: String
-      Default: ${self:custom.dynamodb.tableNames.BOOKING_HISTORY_DB_NAME}
-    BanAddrsDBName:
-      Type: String
-      Default: ${self:custom.dynamodb.tableNames.BAN_ADDRS_DB_NAME}
-    SendNoticeHistoryDBName:
-      Type: String
-      Default: ${self:custom.dynamodb.tableNames.SEND_NOTICE_HISTORY_DB_NAME}
+  # Parameters:
   
   Resources:
     #=====================================#
@@ -35,36 +23,10 @@ export:
                 - dynamodb:BatchWriteItem
               # 操作を許可するテーブルのARNを指定する
               Resource: 
-                - !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${ContactHistoryDBName}"
-                - !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${BookingHistoryDBName}"
-                - !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${BanAddrsDBName}"
-                - !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${SendNoticeHistoryDBName}"
+                - !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/*"
               # Condition:
               #   StringEquals:
               #     aws:ResourceTag/App: ${self:app}
-    
-    #=====================================#
-    ## SendNoticeHistoryTable操作権限
-    #=====================================#
-    OperationSendNoticeHistoryTablePolicy:
-      Type: AWS::IAM::ManagedPolicy
-      Properties:
-        ManagedPolicyName: ${self:custom.servicePrefix.IAM-ManagedPolicy}-OperationSendNoticeHistoryTable
-        PolicyDocument:
-          Version: "2012-10-17"
-          Statement:
-            - Sid: OperationSendNoticeHistoryTable
-              Effect: Allow
-              Action:
-                - dynamodb:GetItem
-                - dynamodb:PutItem
-                - dynamodb:Query
-                - dynamodb:UpdateItem
-                - dynamodb:BatchGetItem
-                - dynamodb:BatchWriteItem
-              # 操作を許可するテーブルのARNを指定する
-              Resource: 
-                - !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${SendNoticeHistoryDBName}"
     
     #=====================================#
     ## Email送信ポリシー

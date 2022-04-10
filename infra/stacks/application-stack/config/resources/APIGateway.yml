@@ -1,0 +1,171 @@
+export:
+  Resources:
+    #=====================================#
+    ## APIGatewayリソースの作成(openapi使用)
+    #=====================================#
+    ApiGatewayRestApi:
+      Type: "AWS::ApiGateway::RestApi"
+      Properties:
+        Body: ${file(${self:custom.paths.openapiFile})}
+        Tags:
+          - Key: Name
+            Value: ${self:custom.apigateway.name}
+          - Key: Project
+            Value: ${self:custom.project}
+          - Key: App
+            Value: ${self:app}
+          - Key: STAGE
+            Value: ${self:provider.stage}
+
+    #=====================================#
+    ## APIGatewayリソースのデプロイ
+    #=====================================#
+    ApiGatewayDeployment:
+      Type: AWS::ApiGateway::Deployment
+      DependsOn: ApiGatewayRestApi
+      Properties:
+        RestApiId: !Ref ApiGatewayRestApi
+        StageName: ${self:provider.stage}
+        StageDescription:
+          LoggingLevel: "INFO"
+
+    #=====================================#
+    ## APIGateway鍵定義(Freeプラン用)
+    #=====================================#
+    ApiGatewayFreeKey:
+      Type: AWS::ApiGateway::ApiKey
+      DependsOn: ApiGatewayDeployment
+      Properties:
+        Enabled: true
+        Name: ${self:custom.servicePrefix.APIGateway-APIKey}-freeKey
+        Value: ${file(${self:custom.paths.envFile}):export.APIKEY_FREE_VALUE}
+        StageKeys:
+          - RestApiId: !Ref ApiGatewayRestApi
+            StageName: ${self:provider.stage}
+        Tags:
+          - Key: Name
+            Value: ${self:custom.servicePrefix.APIGateway-APIKey}-freeKey
+          - Key: Project
+            Value: ${self:custom.project}
+          - Key: App
+            Value: ${self:app}
+          - Key: STAGE
+            Value: ${self:provider.stage}
+
+    # #=====================================#
+    # ## APIGateway鍵定義(SendEmailプラン用)
+    # #=====================================#
+    # ApiGatewaySendEmailKey:
+    #   Type: AWS::ApiGateway::ApiKey
+    #   DependsOn: ApiGatewayDeployment
+    #   Properties:
+    #     Enabled: true
+    #     Name: ${self:custom.servicePrefix.APIGateway-APIKey}-SendEmailKey
+    #     Value: ${file(${self:custom.paths.envFile}):export.SEND_EMAIL_APIKEY_VALUE}
+    #     StageKeys:
+    #       - RestApiId: !Ref ApiGatewayRestApi
+    #         StageName: ${self:provider.stage}
+    #     Tags:
+    #       - Key: Name
+    #         Value: ${self:custom.servicePrefix.APIGateway-APIKey}-SendEmailKey
+    #       - Key: Project
+    #         Value: ${self:custom.project}
+    #       - Key: App
+    #         Value: ${self:app}
+    #       - Key: STAGE
+    #         Value: ${self:provider.stage}
+
+    #=====================================#
+    ## APIGateway Freeプラン作成
+    #=====================================#
+    ApiGatewayFreePlan:
+      Type: AWS::ApiGateway::UsagePlan
+      DependsOn: ApiGatewayDeployment
+      Properties:
+        ApiStages:
+          - Stage: ${self:provider.stage}
+            ApiId: !Ref ApiGatewayRestApi
+        Quota:
+          Limit: 10000
+          Period: MONTH
+        Throttle:
+          BurstLimit: 50
+          RateLimit: 100
+        UsagePlanName: ${self:custom.servicePrefix.APIGateway-APIKey}-freePlan
+        Tags:
+          - Key: Name
+            Value: ${self:custom.servicePrefix.APIGateway-APIKey}-freePlan
+          - Key: Project
+            Value: ${self:custom.project}
+          - Key: App
+            Value: ${self:app}
+          - Key: STAGE
+            Value: ${self:provider.stage}
+
+    # #=====================================#
+    # ## APIGateway SendEmailプラン作成
+    # #=====================================#
+    # ApiGatewaySendEmailPlan:
+    #   Type: AWS::ApiGateway::UsagePlan
+    #   DependsOn: ApiGatewayDeployment
+    #   Properties:
+    #     ApiStages:
+    #       - Stage: ${self:provider.stage}
+    #         ApiId: !Ref ApiGatewayRestApi
+    #     Quota:
+    #       Limit: 2000
+    #       Period: MONTH
+    #     Throttle:
+    #       BurstLimit: 2
+    #       RateLimit: 4
+    #     UsagePlanName: ${self:custom.servicePrefix.APIGateway-APIKey}-sendEmailPlan
+    #     Tags:
+    #       - Key: Name
+    #         Value: ${self:custom.servicePrefix.APIGateway-APIKey}-sendEmailPlan
+    #       - Key: Project
+    #         Value: ${self:custom.project}
+    #       - Key: App
+    #         Value: ${self:app}
+    #       - Key: STAGE
+    #         Value: ${self:provider.stage}
+
+    #=====================================#
+    ## APIGateway鍵紐づけ(Freeプラン用)
+    #=====================================#
+    ApiGatewayFreePlanKey:
+      Type: AWS::ApiGateway::UsagePlanKey
+      DependsOn:
+        - ApiGatewayFreeKey
+        - ApiGatewayFreePlan
+      Properties:
+        KeyId: !Ref ApiGatewayFreeKey
+        KeyType: API_KEY
+        UsagePlanId: !Ref ApiGatewayFreePlan
+
+    # #=====================================#
+    # ## APIGateway鍵紐づけ(SendEmailプラン用)
+    # #=====================================#
+    # ApiGatewaySendEmailPlanKey:
+    #   Type: AWS::ApiGateway::UsagePlanKey
+    #   DependsOn:
+    #     - ApiGatewaySendEmailKey
+    #     - ApiGatewaySendEmailPlan
+    #   Properties:
+    #     KeyId: !Ref ApiGatewaySendEmailKey
+    #     KeyType: API_KEY
+    #     UsagePlanId: !Ref ApiGatewaySendEmailPlan
+
+
+  Outputs:
+    ApiGatewayRestApiId:
+      Value: !Ref ApiGatewayRestApi
+      Export:
+        Name: ${self:provider.stackName}-ApiGatewayRestApiId
+    APIGatewayRestApiEndpoint:
+      Value: !Join ["", ["https://", !Ref ApiGatewayRestApi, ".execute-api.${self:provider.region}.amazonaws.com/${self:provider.stage}"]]
+      Export:
+        Name: ${self:provider.stackName}-APIGatewayRestApiEndpoint
+    APIGatewayRestApiLog:
+      Value: !Join ["", ["API-Gateway-Execution-Logs_", !Ref ApiGatewayRestApi, "/", "${self:provider.stage}"]]
+      Export:
+        Name: ${self:provider.stackName}-APIGatewayRestApiLog

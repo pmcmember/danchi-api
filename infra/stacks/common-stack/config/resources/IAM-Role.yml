@@ -1,0 +1,148 @@
+export:
+  Resources:
+    #=====================================#
+    ## Standard lambdaロール              #
+    #=====================================#
+    StandardLambdaRole:
+      Type: AWS::IAM::Role
+      DependsOn:
+        - EnableWriteLogPolicy
+        - SendNoticePolicy
+      Properties:
+        RoleName: ${self:custom.servicePrefix.IAM-Role}-StandardLambda
+        Path: /${self:app}/
+        ManagedPolicyArns:
+          - !Ref EnableWriteLogPolicy
+          - !Ref SendNoticePolicy
+        AssumeRolePolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service:
+                  - lambda.amazonaws.com
+              Action: sts:AssumeRole
+        Tags:
+          - Key: Name
+            Value: ${self:custom.servicePrefix.IAM-Role}-StandardLambda
+          - Key: Project
+            Value: ${self:custom.project}
+          - Key: App
+            Value: ${self:app}
+          - Key: STAGE
+            Value: ${self:provider.stage}
+
+    #=====================================#
+    ## APIGateway用ロール                 #
+    #=====================================#
+    APIGWStandardRole:
+      Type: AWS::IAM::Role
+      DependsOn:
+        - EnableWriteLogPolicy
+        - LambdaInvokePolicy
+      Properties:
+        RoleName: ${self:custom.servicePrefix.IAM-Role}-APIGWStandard
+        Path: /${self:app}/
+        ManagedPolicyArns:
+          - !Ref EnableWriteLogPolicy
+          - !Ref LambdaInvokePolicy
+        AssumeRolePolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service:
+                  - apigateway.amazonaws.com
+              Action: sts:AssumeRole
+        Tags:
+          - Key: Name
+            Value: ${self:custom.servicePrefix.IAM-Role}-APIGWStandard
+          - Key: Project
+            Value: ${self:custom.project}
+          - Key: App
+            Value: ${self:app}
+          - Key: STAGE
+            Value: ${self:provider.stage}
+
+    #=====================================#
+    ## SlackChatbot用ロール
+    #=====================================#
+    SlackChatbotRole:
+      Type: AWS::IAM::Role
+      DependsOn:
+        - EnableWriteLogPolicy
+      Properties:
+        RoleName: ${self:custom.servicePrefix.IAM-Role}-SlackChatbot
+        Path: /${self:app}/
+        ManagedPolicyArns:
+          - !Ref EnableWriteLogPolicy
+          - arn:aws:iam::aws:policy/CloudWatchReadOnlyAccess
+        AssumeRolePolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service: chatbot.amazonaws.com
+              Action: sts:AssumeRole
+        Tags:
+          - Key: Name
+            Value: ${self:custom.servicePrefix.IAM-Role}-SlackChatbot
+          - Key: Project
+            Value: ${self:custom.project}
+          - Key: App
+            Value: ${self:app}
+          - Key: STAGE
+            Value: ${self:provider.stage}
+    
+    #=====================================#
+    ## IframeConverter Lambda用ロール
+    #=====================================#
+    IframeConverterLambdaRole:
+      Type: AWS::IAM::Role
+      DependsOn:
+        - EnableWriteLogPolicy
+        - SendNoticePolicy
+        - OperationAllTableOwnedByAppPolicy
+      Properties:
+        RoleName: ${self:custom.servicePrefix.IAM-Role}-IframeConverterLambda
+        Path: /${self:app}/
+        ManagedPolicyArns:
+          - !Ref EnableWriteLogPolicy
+          - !Ref SendNoticePolicy
+          - !Ref OperationAllTableOwnedByAppPolicy
+        AssumeRolePolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service:
+                  - lambda.amazonaws.com
+              Action: sts:AssumeRole
+        Tags:
+          - Key: Name
+            Value: ${self:custom.servicePrefix.IAM-Role}-IframeConverterLambda
+          - Key: Project
+            Value: ${self:custom.project}
+          - Key: App
+            Value: ${self:app}
+          - Key: STAGE
+            Value: ${self:provider.stage}
+
+
+  Outputs:
+    StandardLambdaRoleArn:
+      Value: !GetAtt StandardLambdaRole.Arn
+      Export:
+        Name: ${self:provider.stackName}-StandardLambdaRoleArn
+    APIGWStandardRoleArn:
+      Value: !GetAtt APIGWStandardRole.Arn
+      Export:
+        Name: ${self:provider.stackName}-APIGWStandardRoleArn
+    SlackChatbotRoleArn:
+      Value: !GetAtt SlackChatbotRole.Arn
+      Export:
+        Name: ${self:provider.stackName}-SlackChatbotRoleArn
+    IframeConverterLambdaRoleArn:
+      Value: !GetAtt IframeConverterLambdaRole.Arn
+      Export:
+        Name: ${self:provider.stackName}-IframeConverterLambdaRoleArn
