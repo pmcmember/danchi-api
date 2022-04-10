@@ -19,13 +19,14 @@
     "readme:link": "doctoc README.md --github"
   },
   "devDependencies": {
-    "aws-sdk": "^2.817.0",
     "@types/aws-lambda": "^8.10.17",
     "@types/jest": "^27.0.2",
     "@types/node": "^10.12.18",
     "@types/serverless": "^1.78.35",
+    "aws-sdk": "^2.817.0",
     "fork-ts-checker-webpack-plugin": "^6.3.4",
     "jest": "^27.2.1",
+    "microcms-js-sdk": "^2.0.0",
     "serverless": "^2.60.0",
     "serverless-webpack": "^5.5.4",
     "ts-jest": "^27.0.5",
@@ -33,7 +34,12 @@
     "ts-node": "^8.10.2",
     "typescript": "^3.2.4",
     "webpack": "^5.55.1",
-    "webpack-node-externals": "^1.7.2",
-    "microcms-js-sdk": "^2.0.0"
+    "webpack-node-externals": "^1.7.2"
+  },
+  "dependencies": {
+    "@types/jsdom": "^16.2.14",
+    "axios": "^0.26.1",
+    "jsdom": "^19.0.0",
+    "node-fetch": "^3.2.3"
   }
 }
