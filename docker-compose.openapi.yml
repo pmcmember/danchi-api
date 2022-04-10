@@ -10,7 +10,7 @@ services:
     volumes:
       - ./docs/openapi/:/openapi/
     environment:
-      SWAGGER_JSON: /openapi/dist/v1/openapi.json
+      SWAGGER_JSON: /openapi/dist/openapi.json
 
   swagger-merger:
     build: ./docker/openapi/swagger-merger
