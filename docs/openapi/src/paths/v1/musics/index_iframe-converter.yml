@@ -6,6 +6,7 @@ post:
   security:
     - lambdaAuthorizer: []
     - apiKey: []
+  x-amazon-apigateway-request-validator: body-only
   x-amazon-apigateway-integration:
     type: aws_proxy
     credentials:
@@ -15,7 +16,7 @@ post:
         - "/"
         - - "arn:aws:apigateway:${self:provider.region}:lambda:path/2015-03-31/functions"
           -
-            Fn::GetAtt: MicroCMSKickLambdaFunction.Arn
+            Fn::GetAtt: IframeConverterLambdaFunction.Arn
           - "invocations"
     passthroughBehavior: "when_no_match"
     httpMethod: "POST"
@@ -25,12 +26,12 @@ post:
       name: id
       type: string
       required: true
-      description: "BlogのIDを指定"
+      description: "musicsのIDを指定"
   requestBody:
     content:
       application/json:
         schema:
-          $ref: "../../../openapi.yml#/components/schemas/MusicsIframeConverterRequest"
+          $ref: "../../../openapi.yml#/components/schemas/IframeConverterRequest"
   responses:
     200:
       description: "成功時のレスポンス"

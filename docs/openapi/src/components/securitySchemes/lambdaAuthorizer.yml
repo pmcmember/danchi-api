@@ -1,10 +1,10 @@
 type: apiKey
-name: Authorization
+name: X-Custom-Authorization
 in: header
 x-amazon-apigateway-authtype: "custom"
 x-amazon-apigateway-authorizer:
-  type: token
-  # identitySource: method.request.header.Authorization
+  type: request
+  identitySource: method.request.header.X-Custom-Authorization
   authorizerUri:
     Fn::Join:
       - "/"
@@ -14,4 +14,3 @@ x-amazon-apigateway-authorizer:
         - "invocations"
   # 認証結果をキャッシュしない
   authorizerResultTtlInSeconds: 0
-

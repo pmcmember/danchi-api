@@ -15,7 +15,7 @@ get:
         - "/"
         - - "arn:aws:apigateway:${self:provider.region}:lambda:path/2015-03-31/functions"
           -
-            Fn::GetAtt: MicroCMSKickLambdaFunction.Arn
+            Fn::GetAtt: KickRequestToMicroCMSLambdaFunction.Arn
           - "invocations"
     passthroughBehavior: "when_no_match"
     httpMethod: "POST"

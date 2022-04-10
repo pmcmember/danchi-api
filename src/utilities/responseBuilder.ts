@@ -1,12 +1,10 @@
-import { APIGatewayProxyResult } from 'aws-lambda';
+import { APIGatewayProxyResult,  } from 'aws-lambda';
 
-type BodyDataTypes = {
+type BodyDataTypes<T = {
     message: string
-} & {
-    [key: string]: any
-}
+}> =  T
 
-const responseBuilder = (statusCode: number, data: BodyDataTypes): APIGatewayProxyResult => {
+const responseBuilder = <T>(statusCode: number, data: BodyDataTypes<T>): APIGatewayProxyResult => {
     return {
         statusCode: statusCode,
         headers: {
