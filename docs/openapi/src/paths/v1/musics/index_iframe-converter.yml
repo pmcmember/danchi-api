@@ -6,7 +6,7 @@ post:
   security:
     - lambdaAuthorizer: []
     - apiKey: []
-  x-amazon-apigateway-request-validator: body-only
+  x-amazon-apigateway-request-validator: basic
   x-amazon-apigateway-integration:
     type: aws_proxy
     credentials:
@@ -21,17 +21,11 @@ post:
     passthroughBehavior: "when_no_match"
     httpMethod: "POST"
     contentHandling: "CONVERT_TO_TEXT"
-  parameters:
-    - in: path
-      name: id
-      type: string
-      required: true
-      description: "musicsのIDを指定"
   requestBody:
     content:
       application/json:
         schema:
-          $ref: "../../../openapi.yml#/components/schemas/IframeConverterRequest"
+          $ref: "../../../openapi.yml#/components/schemas/MusicsIframeConverterRequest"
   responses:
     200:
       description: "成功時のレスポンス"

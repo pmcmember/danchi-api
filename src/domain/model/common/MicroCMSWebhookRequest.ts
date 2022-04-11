@@ -11,7 +11,7 @@ export type MicroCMSWebhookRequest<T extends MicroCMSListContent> = {
     } | null;
 }
 
-type MicroCMSWebhookContents<T extends MicroCMSListContent> = {
+export type MicroCMSWebhookContents<T extends MicroCMSListContent> = {
     id: string;
     status: Array<"DRAFT" | "PUBLISH">;
     draftKey: string | null;

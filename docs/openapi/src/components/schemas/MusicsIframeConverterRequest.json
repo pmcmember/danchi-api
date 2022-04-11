@@ -53,7 +53,7 @@
                             "allOf": [
                                 {
                                     "properties": {
-                                        "iframeRaw": {
+                                        "rawIframe": {
                                             "type": "string"
                                         },
                                         "scApiUrl": {
@@ -76,7 +76,7 @@
                                         }
                                     },
                                     "required": [
-                                        "iframeRaw"
+                                        "rawIframe"
                                     ],
                                     "type": "object"
                                 },
@@ -95,7 +95,7 @@
                             "allOf": [
                                 {
                                     "properties": {
-                                        "iframeRaw": {
+                                        "rawIframe": {
                                             "type": "string"
                                         },
                                         "scApiUrl": {
@@ -118,7 +118,7 @@
                                         }
                                     },
                                     "required": [
-                                        "iframeRaw"
+                                        "rawIframe"
                                     ],
                                     "type": "object"
                                 },
@@ -159,7 +159,7 @@
                             "allOf": [
                                 {
                                     "properties": {
-                                        "iframeRaw": {
+                                        "rawIframe": {
                                             "type": "string"
                                         },
                                         "scApiUrl": {
@@ -182,7 +182,7 @@
                                         }
                                     },
                                     "required": [
-                                        "iframeRaw"
+                                        "rawIframe"
                                     ],
                                     "type": "object"
                                 },
@@ -201,7 +201,7 @@
                             "allOf": [
                                 {
                                     "properties": {
-                                        "iframeRaw": {
+                                        "rawIframe": {
                                             "type": "string"
                                         },
                                         "scApiUrl": {
@@ -224,7 +224,7 @@
                                         }
                                     },
                                     "required": [
-                                        "iframeRaw"
+                                        "rawIframe"
                                     ],
                                     "type": "object"
                                 },

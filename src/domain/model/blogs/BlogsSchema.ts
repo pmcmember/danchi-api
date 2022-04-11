@@ -5,7 +5,7 @@ export type BlogsSchema = {
     title: string;
     image?: MicroCMSImage;
     categories: string[];
-    tags?: string[];
+    tags?: string;
     description: string;
     content: string;
 }

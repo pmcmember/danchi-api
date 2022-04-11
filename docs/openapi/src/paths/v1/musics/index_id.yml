@@ -6,6 +6,7 @@ get:
   security:
     - lambdaAuthorizer: []
     - apiKey: []
+  x-amazon-apigateway-request-validator: basic
   x-amazon-apigateway-integration:
     type: aws_proxy
     credentials:
@@ -48,7 +49,7 @@ get:
       content:
         application/json:
           schema:
-            $ref: "../../../openapi.yml#/components/schemas/MusicsObjectResponse"
+            $ref: "../../../openapi.yml#/components/schemas/MusicsResult"
     500:
       description: "サーバ異常終了時のレスポンス"
       content:

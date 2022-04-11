@@ -21,7 +21,7 @@ services:
     command: >
      sh -c '
       watch "swagger-merger -c -i ./docs/openapi/src/openapi.yml -o ./docs/openapi/dist/openapi.json" ./docs/openapi/src &
-      sh ./docker/openapi/swagger-merger/generateJsonSchema.sh ./docs/openapi/src
+      sh ./docker/openapi/swagger-merger/generateJsonSchema.sh ./src/domain/model ./docs/openapi/src/components/schemas "index\.ts"
      '
 
   # swagger-editor:
