@@ -58,7 +58,7 @@ export const main: APIGatewayProxyHandler = async (
         const newSchema: MusicsSchema = ObjectUtil.removeKeyValue(newSchemaWithContents, ["id", "createdAt", "updatedAt", "publishedAt", "revisedAt"]);
         const oldSchema: MusicsSchema = ObjectUtil.removeKeyValue(oldSchemaWithContents || {}, ["id", "createdAt", "updatedAt", "publishedAt", "revisedAt"]);
         
-        if(ObjectUtil.compare(newSchema, oldSchema)) {
+        if(ObjectUtil.isDifference(newSchema, oldSchema)) {
             const repository = new MusicsRepositoryImpl();
             const result = await repository.update(data.id!, convertedSchema);
             console.log(JSON.stringify(convertedSchema));
@@ -73,6 +73,8 @@ export const main: APIGatewayProxyHandler = async (
                 })
         } else {
             console.log("更新内容に変化がなかったため、MicroCMSにリクエストを送信しませんでした。")
+            console.log("old", JSON.stringify(oldSchema))
+            console.log("new", JSON.stringify(newSchema))
             response = responseBuilder(200, {
                 message: "OK"
             })

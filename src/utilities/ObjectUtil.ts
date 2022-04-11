@@ -4,11 +4,11 @@ type ObjectType = {
 }
 
 export class ObjectUtil {
-    static compare = (data1: ObjectType, data2: ObjectType): boolean => {
+    static isDifference = (data1: ObjectType, data2: ObjectType): boolean => {
         const data1Str = JSON.stringify(data1);
         const data2Str = JSON.stringify(data2);
 
-        return data1Str === data2Str
+        return data1Str !== data2Str
     }
 
     static removeKeyValue = <
