@@ -1,5 +1,4 @@
 import { MicroCMSObjectContent } from 'microcms-js-sdk';
 import { BlogsSchema } from './BlogsSchema'
 
-
-export type BlogsObjectResponse = BlogsSchema & MicroCMSObjectContent;
+export type BlogsResult = BlogsSchema & MicroCMSObjectContent;

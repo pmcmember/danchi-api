@@ -43,10 +43,7 @@
             "$ref": "#/definitions/MicroCMSImage"
         },
         "tags": {
-            "items": {
-                "type": "string"
-            },
-            "type": "array"
+            "type": "string"
         },
         "title": {
             "type": "string"

@@ -43,21 +43,19 @@ components:
   ##
   schemas:
     ## Requests
-    AuthRequestHeaders:
-      $ref: "./components/schemas/AuthRequestHeaders.json" 
-    IframeConverterRequest:
-      $ref: "./components/schemas/IframeConverterRequest.json" 
+    MusicsIframeConverterRequest:
+      $ref: "./components/schemas/MusicsIframeConverterRequest.json" 
     ## Responses
     StandardResponse:
       $ref: "./components/schemas/StandardResponse.json" 
-    BlogsListResponse:
-      $ref: "./components/schemas/BlogsListResponse.json" 
-    BlogsObjectResponse:
-      $ref: "./components/schemas/BlogsObjectResponse.json" 
-    MusicsListResponse:
-      $ref: "./components/schemas/MusicsListResponse.json" 
-    MusicsObjectResponse:
-      $ref: "./components/schemas/MusicsObjectResponse.json" 
+    BlogsResultList:
+      $ref: "./components/schemas/BlogsResultList.json" 
+    BlogsResult:
+      $ref: "./components/schemas/BlogsResult.json" 
+    MusicsResultList:
+      $ref: "./components/schemas/MusicsResultList.json" 
+    MusicsResult:
+      $ref: "./components/schemas/MusicsResult.json" 
     ## Schema Model
     MusicsSchema:
       $ref: "./components/schemas/MusicsSchema.json" 

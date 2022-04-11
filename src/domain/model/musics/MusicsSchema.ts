@@ -1,5 +1,5 @@
 export type MusicsSchema = {
-    iframeRaw: string;
+    rawIframe: string;
     scSrc?: string;
     scArtistName?: string;
     scArtistHref?: string;

@@ -1,4 +1,4 @@
-export type Result<T, E> = Success<T, E> | Failure<T, E>
+export type Result<T, E> = Success<T, unknown> | Failure<unknown, E>
 
 export class Success<T, E> {
     public data: T;
