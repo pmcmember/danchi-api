@@ -9,7 +9,7 @@ module.exports = async() => ({
     },
     moduleNameMapper: {
       "^@\/(.+)": "<rootDir>/src/$1",
-      "^@root\/(.+)": "<rootDir>/$1"
+      "^\/(.+)": "<rootDir>/$1"
     },
     globalSetup: "<rootDir>/bin/setup.js"
 })
