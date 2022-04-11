@@ -1,6 +1,6 @@
 import { APIGatewayProxyResult,  } from 'aws-lambda';
 
-type BodyDataTypes<T = {
+type BodyDataTypes<T extends {[key: string]: any} = {
     message: string
 }> =  T
 

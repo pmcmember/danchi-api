@@ -1,18 +1,19 @@
 import {
     APIGatewayProxyHandler,
-    APIGatewayProxyResult
+    APIGatewayProxyResult,
 } from 'aws-lambda';
 import responseBuilder from '@/utilities/responseBuilder';
 import handlerComUtil from '@/utilities/handlerComUtil';
 import { JSDOM } from 'jsdom';
 
-import { IframeConverterRequest } from '/docs/openapi/src/components/schemas/IframeConverterRequest'
-import { StandardResponse } from '/docs/openapi/src/components/schemas/StandardResponse';
-import { MusicsSchema } from '/docs/openapi/src/components/schemas/MusicsSchema';
+import { MusicsIframeConverterRequest } from '@/domain/model/musics/MusicsIframeConverterRequest'
+import { MusicsSchema } from '@/domain/model/musics/MusicsSchema';
 import { MicroCMSListContent } from 'microcms-js-sdk'
 import { DBService } from '@/utilities/DBService'
 import { Base64Util } from '@/utilities/Base64Util';
 import axios from 'axios'
+import { ObjectUtil } from '@/utilities/ObjectUtil';
+import { MusicsRepositoryImpl } from '@/infrastructure/repositories/MusicsRepository';
 
 // TODO: リファクタ
 
@@ -35,81 +36,41 @@ export const main: APIGatewayProxyHandler = async (
         if( ! event.body) {
             throw new Error("Error: event.body must be NOT null or NOT undefined.");
         }
-        console.log(event.body)
         
         let response: APIGatewayProxyResult;
-        const data: IframeConverterRequest = JSON.parse(event.body);
+        const data: MusicsIframeConverterRequest = JSON.parse(event.body);
 
         if( ! data.contents?.new) {
             throw new Error("Error: Invalid request. Please update the data in MicroCMS and make the request with the webhook setting enabled.")
         }
 
-        const schemaWithContents = (
+        const newSchemaWithContents = (
             data.contents.new.status.includes("DRAFT")? data.contents.new.draftValue
-            : data.contents.new.status.includes("PUBLISH")? data.contents.new.publishValue
-            : {}
+            :  data.contents.new.publishValue
         ) as MusicsSchema & MicroCMSListContent
+        const oldSchemaWithContents = (
+            data.contents.old?.status.includes("DRAFT")? data.contents.old?.draftValue
+            :  data.contents.old?.publishValue
+        ) as MusicsSchema & MicroCMSListContent | undefined
         
-        if(Object.keys(schemaWithContents).length < 0) {
-            throw new Error("Error: Invalid request. Please make a DRAFT or PUBLISH request.")
-        }
+        const convertedSchema = convertIframe(newSchemaWithContents.rawIframe);
         
-        const convertedSchema = convertIframe(schemaWithContents);
-        console.log(convertedSchema);
+        const newSchema: MusicsSchema = ObjectUtil.removeKeyValue(newSchemaWithContents, ["id", "createdAt", "updatedAt", "publishedAt", "revisedAt"]);
+        const oldSchema: MusicsSchema = ObjectUtil.removeKeyValue(oldSchemaWithContents || {}, ["id", "createdAt", "updatedAt", "publishedAt", "revisedAt"]);
         
-        const db = DBService.getInstance();
-        const result = await db.get({
-            TableName: process.env.MICROCMS_WEBHOOK_CONTENT_NAME || "",
-            Key: {
-                id: schemaWithContents.id
-            }
-        })
-        
-        if(result.isFailure()) {
-            throw result.data;
-        }
-        
-        const schema = 
-            Object.keys(schemaWithContents).filter((key) => {
-                return (
-                    key !== "createdAt"
-                    && key !== "updatedAt"
-                    && key !== "publishedAt"
-                    && key !== "revisedAt"
-                    && key !== "id" 
-                )
-            })
-            .reduce((pre, crr) => {
-                const _crr = crr as keyof MusicsSchema
-                return Object.assign(pre, {[_crr]: schemaWithContents[_crr]})
-            }, {})
-        
-        if(result.data.Item?.content !== Base64Util.encode(JSON.stringify(schema))) {
-            const endpoint = `${process.env.MICROCMS_API_BASEURL}/${data.api}/${data.id}`;
-            console.log(endpoint)
-            const res = await axios({
-                method: "patch",
-                url: endpoint,
-                data: convertedSchema,
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-MICROCMS-API-KEY": process.env.MICROCMS_API_KEY || ""
-                }
-            })
+        if(ObjectUtil.compare(newSchema, oldSchema)) {
+            const repository = new MusicsRepositoryImpl();
+            const result = await repository.update(data.id!, convertedSchema);
+            console.log(JSON.stringify(convertedSchema));
     
-            console.log(JSON.stringify(res.data));
-            
-            await db.put({
-                TableName: process.env.MICROCMS_WEBHOOK_CONTENT_NAME || "",
-                Item: {
-                    id: schemaWithContents.id,
-                    content: Base64Util.encode(JSON.stringify(convertedSchema))
-                }
-            })
-
-            response = responseBuilder(201, {
-                message: "update complete"
-            })
+            response = result.isSuccess() ?
+                responseBuilder(201, {
+                    message: "update complete"
+                })
+            :
+                responseBuilder(500, {
+                    message: "update is failed"
+                })
         } else {
             console.log("更新内容に変化がなかったため、MicroCMSにリクエストを送信しませんでした。")
             response = responseBuilder(200, {
@@ -122,14 +83,14 @@ export const main: APIGatewayProxyHandler = async (
 }
 
 
-const convertIframe = <T extends MusicsSchema = MusicsSchema>(data: T): MusicsSchema => {
-    const jsdom = new JSDOM(data.iframeRaw);
+const convertIframe = (rawIframe: string): MusicsSchema => {
+    const jsdom = new JSDOM(rawIframe);
 
     const iframe = jsdom.window.document.querySelector("iframe")!;
     const [artistAncor, songAncor] = Array.from(jsdom.window.document.querySelectorAll("a"));
 
     return {
-        iframeRaw: data.iframeRaw,
+        rawIframe: rawIframe,
         scSrc: iframe.src,
         scArtistName: artistAncor.title,
         scArtistHref: artistAncor.href,
