@@ -44,7 +44,25 @@
             "$ref": "#/definitions/MicroCMSImage"
         },
         "tags": {
-            "type": "string"
+            "items": {
+                "properties": {
+                    "fieldId": {
+                        "enum": [
+                            "tag"
+                        ],
+                        "type": "string"
+                    },
+                    "tag": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "fieldId",
+                    "tag"
+                ],
+                "type": "object"
+            },
+            "type": "array"
         },
         "title": {
             "type": "string"

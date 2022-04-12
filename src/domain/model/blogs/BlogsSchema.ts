@@ -10,7 +10,13 @@ export type BlogsSchema = {
     title: string;
     image?: MicroCMSImage;
     categories: string[];
-    tags?: string;
+    tags?: Tag[];
     description: string;
     content: string;
+}
+
+
+type Tag = {
+    fieldId: "tag";
+    tag: string
 }
