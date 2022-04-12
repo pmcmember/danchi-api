@@ -44,6 +44,7 @@
             "items": {
                 "allOf": [
                     {
+                        "description": "musics APIのスキーマ\n\n注：songCategoriesは複数指定の場合改行区切りで指定される。",
                         "properties": {
                             "rawIframe": {
                                 "type": "string"
@@ -65,6 +66,27 @@
                             },
                             "scSrc": {
                                 "type": "string"
+                            },
+                            "songCategories": {
+                                "items": {
+                                    "properties": {
+                                        "fieldId": {
+                                            "enum": [
+                                                "songCategory"
+                                            ],
+                                            "type": "string"
+                                        },
+                                        "songCategory": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": [
+                                        "fieldId",
+                                        "songCategory"
+                                    ],
+                                    "type": "object"
+                                },
+                                "type": "array"
                             }
                         },
                         "required": [
