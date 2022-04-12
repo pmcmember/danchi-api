@@ -9,15 +9,8 @@ import { JSDOM } from 'jsdom';
 import { MusicsIframeConverterRequest } from '@/domain/model/musics/MusicsIframeConverterRequest'
 import { MusicsSchema } from '@/domain/model/musics/MusicsSchema';
 import { MicroCMSListContent } from 'microcms-js-sdk'
-import { DBService } from '@/utilities/DBService'
-import { Base64Util } from '@/utilities/Base64Util';
-import axios from 'axios'
 import { ObjectUtil } from '@/utilities/ObjectUtil';
 import { MusicsRepositoryImpl } from '@/infrastructure/repositories/MusicsRepository';
-
-// TODO: リファクタ
-
-
 
 
 /**
@@ -53,14 +46,14 @@ export const main: APIGatewayProxyHandler = async (
             :  data.contents.old?.publishValue
         ) as MusicsSchema & MicroCMSListContent | undefined
         
-        const convertedSchema = convertIframe(newSchemaWithContents.rawIframe);
-        
         const newSchema: MusicsSchema = ObjectUtil.removeKeyValue(newSchemaWithContents, ["id", "createdAt", "updatedAt", "publishedAt", "revisedAt"]);
         const oldSchema: MusicsSchema = ObjectUtil.removeKeyValue(oldSchemaWithContents || {}, ["id", "createdAt", "updatedAt", "publishedAt", "revisedAt"]);
         
-        if(ObjectUtil.compare(newSchema, oldSchema)) {
+        if(ObjectUtil.isDifference(newSchema, oldSchema)) {
             const repository = new MusicsRepositoryImpl();
+            const convertedSchema = convertIframe(newSchema);
             const result = await repository.update(data.id!, convertedSchema);
+            
             console.log(JSON.stringify(convertedSchema));
     
             response = result.isSuccess() ?
@@ -73,6 +66,8 @@ export const main: APIGatewayProxyHandler = async (
                 })
         } else {
             console.log("更新内容に変化がなかったため、MicroCMSにリクエストを送信しませんでした。")
+            console.log("old", JSON.stringify(oldSchema))
+            console.log("new", JSON.stringify(newSchema))
             response = responseBuilder(200, {
                 message: "OK"
             })
@@ -83,14 +78,14 @@ export const main: APIGatewayProxyHandler = async (
 }
 
 
-const convertIframe = (rawIframe: string): MusicsSchema => {
-    const jsdom = new JSDOM(rawIframe);
+const convertIframe = (musicsSchema: MusicsSchema): MusicsSchema => {
+    const jsdom = new JSDOM(musicsSchema.rawIframe);
 
     const iframe = jsdom.window.document.querySelector("iframe")!;
     const [artistAncor, songAncor] = Array.from(jsdom.window.document.querySelectorAll("a"));
 
     return {
-        rawIframe: rawIframe,
+        ...musicsSchema,
         scSrc: iframe.src,
         scArtistName: artistAncor.title,
         scArtistHref: artistAncor.href,

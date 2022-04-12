@@ -20,6 +20,7 @@
             "type": "object"
         }
     },
+    "description": "blogs APIのスキーマ\n\n注：tagsは複数指定の場合改行区切りで指定される。",
     "properties": {
         "author": {
             "items": {
@@ -43,7 +44,25 @@
             "$ref": "#/definitions/MicroCMSImage"
         },
         "tags": {
-            "type": "string"
+            "items": {
+                "properties": {
+                    "fieldId": {
+                        "enum": [
+                            "tag"
+                        ],
+                        "type": "string"
+                    },
+                    "tag": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "fieldId",
+                    "tag"
+                ],
+                "type": "object"
+            },
+            "type": "array"
         },
         "title": {
             "type": "string"
