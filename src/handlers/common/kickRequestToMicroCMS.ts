@@ -1,18 +1,15 @@
 import {
-    APIGatewayProxyEvent,
     APIGatewayProxyHandler,
-    APIGatewayProxyResult
 } from 'aws-lambda';
 import responseBuilder from '@/utilities/responseBuilder';
 import handlerComUtil from '@/utilities/handlerComUtil';
-import { StandardResponse } from '@/domain/model/common/StandardResponse';
-import axios from 'axios';
-import { MusicsRepositoryImpl, BlogsRepositoryImpl } from '@/infrastructure/repositories';
+import MusicsRepositoryContainer from '@/containers/repositories/MusicsRepository';
+import BlogsRepositoryContainer from '@/containers/repositories/BlogsRepository';
 
 
 
 /**
- * メール送信処理の前段用ヘルスチェック
+ * MicroCMS APIにリクエストをキックする関数
  * @param event 
  * @param context 
  * @param _callback 
@@ -29,7 +26,8 @@ export const main: APIGatewayProxyHandler = async (
 
         switch(apiId) {
             case "musics": {
-                const repository = new MusicsRepositoryImpl()
+                // TODO: DIコンテナ導入検討(パフォーマンスに問題なければ)
+                const repository = MusicsRepositoryContainer.MusicsRepository
                 
                 const result = id ?
                     await repository.fetch(event.pathParameters?.id || "")
@@ -43,7 +41,7 @@ export const main: APIGatewayProxyHandler = async (
                 }
             }
             case "blogs": {
-                const repository = new BlogsRepositoryImpl()
+                const repository = BlogsRepositoryContainer.BlogsRepository
                 
                 const result = id ?
                     await repository.fetch(event.pathParameters?.id || "")
@@ -60,17 +58,4 @@ export const main: APIGatewayProxyHandler = async (
                 throw new Error(`Error: invalid Request -> ${event.resource}`)
         }
     })
-}
-
-
-const router = <T extends {[key: string]: any}>(
-    event: APIGatewayProxyEvent,
-    path: string,
-    controller: (event: APIGatewayProxyEvent) => T
-) => {
-    const response = 
-        event.resource === path?
-            responseBuilder<T>(200, controller(event))
-        :
-            responseBuilder
 }

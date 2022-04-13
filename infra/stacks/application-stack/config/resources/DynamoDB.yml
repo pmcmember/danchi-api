@@ -28,25 +28,25 @@ export:
             Value: ${self:provider.stage}
 
     #=====================================#
-    ## MicroCMS Webhookリクエスト内容確認用テーブル(無限ループ防止用)
+    ## 曲カテゴリー一覧格納用テーブル
     #=====================================#
-    MicroCMSWebhookContentTable:
+    SongCategoryTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: ${self:custom.dynamodb.tableNames.MICROCMS_WEBHOOK_CONTENT_NAME}
+        TableName: ${self:custom.dynamodb.tableNames.SONG_CATEGORY_DB_NAME}
         BillingMode: PROVISIONED
         ProvisionedThroughput:
-          ReadCapacityUnits: 2
-          WriteCapacityUnits: 2
+          ReadCapacityUnits: 4
+          WriteCapacityUnits: 4
         AttributeDefinitions:
-          - AttributeName: id
+          - AttributeName: name
             AttributeType: S
         KeySchema:
-          - AttributeName: id
+          - AttributeName: name
             KeyType: HASH
         Tags:
           - Key: Name
-            Value: ${self:custom.dynamodb.tableNames.MICROCMS_WEBHOOK_CONTENT_NAME}
+            Value: ${self:custom.dynamodb.tableNames.SONG_CATEGORY_DB_NAME}
           - Key: Project
             Value: ${self:custom.project}
           - Key: App
@@ -61,16 +61,16 @@ export:
       Value: !GetAtt ContactHistoryTable.Arn
       Export:
         Name: ${self:provider.stackName}-ContactHistoryTableArn
-    MicroCMSWebhookContentTableArn:
-      Value: !GetAtt MicroCMSWebhookContentTable.Arn
+    SongCategoryTableArn:
+      Value: !GetAtt SongCategoryTable.Arn
       Export:
-        Name: ${self:provider.stackName}-MicroCMSWebhookContentTableArn
+        Name: ${self:provider.stackName}-SongCategoryTableArn
     # Dynamodb Table Name
     ContactHistoryTableName:
       Value: !Ref ContactHistoryTable
       Export:
         Name: ${self:provider.stackName}-ContactHistoryTableName
-    MicroCMSWebhookContentTableName:
-      Value: !Ref MicroCMSWebhookContentTable
+    SongCategoryTableName:
+      Value: !Ref SongCategoryTable
       Export:
-        Name: ${self:provider.stackName}-MicroCMSWebhookContentTableName
+        Name: ${self:provider.stackName}-SongCategoryTableName

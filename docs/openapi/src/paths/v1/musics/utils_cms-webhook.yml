@@ -1,6 +1,9 @@
 post:
-  summary: "Musics Iframe変換"
-  description: "SoundCloudから入手した生Iframe(共有タブに記載されているものそのまま)から情報を抜き取り、musics情報を更新する"
+  summary: "MiscroCMSからのwebhookリクエスト受信エンドポイント"
+  description: |-
+    MiscroCMSからのwebhookリクエストを受けて、
+    １．SoundCloudから取得したiframeから情報を受け取り、受け取った情報をもとにMicroCMSへデータ更新リクエストを飛ばす。
+    ２．Webhookリクエスト内容に含まれている曲カテゴリ情報を取得し、カテゴリ一覧を更新する。
   tags:
     - musics
   security:
@@ -16,7 +19,7 @@ post:
         - "/"
         - - "arn:aws:apigateway:${self:provider.region}:lambda:path/2015-03-31/functions"
           -
-            Fn::GetAtt: IframeConverterLambdaFunction.Arn
+            Fn::GetAtt: CmsWebhookLambdaFunction.Arn
           - "invocations"
     passthroughBehavior: "when_no_match"
     httpMethod: "POST"
@@ -25,7 +28,7 @@ post:
     content:
       application/json:
         schema:
-          $ref: "../../../openapi.yml#/components/schemas/MusicsIframeConverterRequest"
+          $ref: "../../../openapi.yml#/components/schemas/MusicsCmsWebhookRequest"
   responses:
     200:
       description: "成功時のレスポンス"

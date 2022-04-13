@@ -5,7 +5,6 @@ import {
     Context,
     Callback
 } from 'aws-lambda';
-import { Base64Util } from '@/utilities/Base64Util'
 
 
 /**

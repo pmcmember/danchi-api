@@ -1,4 +1,4 @@
-import { MusicsRepository } from '@/domain/repositories'
+import { MusicsRepository } from '@/domain/repositories/MusicsRepository'
 import { MusicsResult, MusicsResultList, MusicsSchema } from '@/domain/model/musics'
 import axios from 'axios';
 import { Failure, Success } from '@/utilities/Result';
