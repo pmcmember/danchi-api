@@ -83,7 +83,8 @@
                                 "type": "string"
                             },
                             "image": {
-                                "$ref": "#/definitions/MicroCMSImage"
+                                "$ref": "#/definitions/MicroCMSImage",
+                                "description": "microCMS image"
                             },
                             "tags": {
                                 "items": {

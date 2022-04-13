@@ -1,5 +1,5 @@
 export:
-  handler: src/handlers/kickRequestToMicroCMS.main
+  handler: src/handlers/common/kickRequestToMicroCMS.main
   package:
     include:
       - kickRequestToMicroCMS.js
@@ -16,4 +16,4 @@ export:
     Project: ${self:custom.project}
     Name: ${self:functions.kickRequestToMicroCMS.name}
     App: ${self:app}
-  memorySize: 512
+  memorySize: 1024

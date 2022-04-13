@@ -80,13 +80,13 @@ export:
   # serverless-webpackプラグインの設定
   webpack:
     webpackConfig: ${self:projectDir}/webpack.config.js
-    includeModules: true
+    includeModules: false
     excludeFiles: __test__/**/*.test.ts
   # serverless-dynamodb-localプラグインの設定
   dynamodb:
     tableNames:
       CONTACT_HISTORY_DB_NAME: ${file(${self:custom.paths.envFile}):export.CONTACT_HISTORY_DB_NAME}
-      MICROCMS_WEBHOOK_CONTENT_NAME: ${file(${self:custom.paths.envFile}):export.MICROCMS_WEBHOOK_CONTENT_NAME}
+      SONG_CATEGORY_DB_NAME: ${file(${self:custom.paths.envFile}):export.SONG_CATEGORY_DB_NAME}
   #   start:
   #     port: "8000"
   #     inMemory: true

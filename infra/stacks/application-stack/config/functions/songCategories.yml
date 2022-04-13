@@ -1,17 +1,18 @@
 export:
-  handler: src/handlers/musics/iframeConverter.main
+  handler: src/handlers/musics/songCategories.main
   package:
     include:
-      - iframeConverter.js
-  role: !ImportValue ${self:custom.stacks.common-stack.name}-IframeConverterLambdaRoleArn
+      - songCategories.js
+  role: !ImportValue ${self:custom.stacks.common-stack.name}-SongCategoriesLambdaRoleArn
   environment:
     ALLOW_ORIGIN: ${file(${self:custom.paths.envFile}):export.ALLOW_ORIGIN}
     SEND_ERROR_NOTICE_SNS_TOPIC_ARN: !ImportValue ${self:custom.stacks.common-stack.name}-SendErrorNoticeToEmailSNSTopicArn
-  name: ${self:custom.servicePrefix.Lambda}-iframeConverter
+    SONG_CATEGORY_DB_NAME: ${file(${self:custom.paths.envFile}):export.SONG_CATEGORY_DB_NAME}
+  name: ${self:custom.servicePrefix.Lambda}-songCategories
   layers:
     - !Ref CommonLayerLambdaLayer
   tags:
     Project: ${self:custom.project}
-    Name: ${self:functions.iframeConverter.name}
+    Name: ${self:functions.songCategories.name}
     App: ${self:app}
   memorySize: 512

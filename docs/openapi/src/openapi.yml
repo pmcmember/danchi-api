@@ -28,14 +28,18 @@ x-amazon-apigateway-request-validators:
 paths:
   /v1/musics:
     $ref: "./paths/v1/musics/index.yml"
-  /v1/musics/{id}:
-    $ref: "./paths/v1/musics/index_id.yml"
-  /v1/musics/iframe-converter:
-    $ref: "./paths/v1/musics/index_iframe-converter.yml"
+  /v1/musics/detail/{id}:
+    $ref: "./paths/v1/musics/detail_id.yml"
+  /v1/musics/song-categories:
+    $ref: "./paths/v1/musics/song-categories.yml"
+  /v1/musics/utils/cms-webhook:
+    $ref: "./paths/v1/musics/utils_cms-webhook.yml"
+  /v1/musics/utils/iframe-converter:
+    $ref: "./paths/v1/musics/utils_iframe-converter.yml"
   /v1/blogs:
     $ref: "./paths/v1/blogs/index.yml"
-  /v1/blogs/{id}:
-    $ref: "./paths/v1/blogs/index_id.yml"
+  /v1/blogs/detail/{id}:
+    $ref: "./paths/v1/blogs/detail_id.yml"
 
 components:
   ##
@@ -43,8 +47,10 @@ components:
   ##
   schemas:
     ## Requests
-    MusicsIframeConverterRequest:
-      $ref: "./components/schemas/MusicsIframeConverterRequest.json" 
+    MusicsCmsWebhookRequest:
+      $ref: "./components/schemas/MusicsCmsWebhookRequest.json"
+    MusicsSongCategories:
+      $ref: "./components/schemas/MusicsSongCategories.json"
     ## Responses
     StandardResponse:
       $ref: "./components/schemas/StandardResponse.json" 

@@ -58,7 +58,9 @@ while true; do
         echo "${f}@@${current}" >> $TMP_FILE
       fi
 
-      typescript-json-schema $f $(basename $f | cut -d. -f1) --required > ${DESTINATION_PATH}/$(basename $f | sed -e s/\.ts$/.json/)
+      jsonSchema="${DESTINATION_PATH}/$(basename $f | sed -e s/\.ts$/.json/)"
+
+      typescript-json-schema $f $(basename $f | cut -d. -f1) --required --strictNullChecks true > "${jsonSchema}"
     fi
   done
 

@@ -32,3 +32,26 @@ export:
         Action: "lambda:InvokeFunction"
         Principal: "apigateway.amazonaws.com"
       DependsOn: LambdaAuthorizerLambdaFunction
+
+    #=====================================#
+    ## APIGateway 曲のカテゴリ操作関数の実行権限付与
+    #=====================================#
+    SongCategoriesApiPermission:
+      Type: "AWS::Lambda::Permission"
+      Properties:
+        FunctionName: ${self:functions.songCategories.name}
+        Action: "lambda:InvokeFunction"
+        Principal: "apigateway.amazonaws.com"
+      DependsOn: SongCategoriesLambdaFunction
+
+    #=====================================#
+    ## APIGateway CMS Webhook関数実行権限
+    #=====================================#
+    CmsWebhookApiPermission:
+      Type: "AWS::Lambda::Permission"
+      Properties:
+        FunctionName: ${self:functions.cmsWebhook.name}
+        Action: "lambda:InvokeFunction"
+        Principal: "apigateway.amazonaws.com"
+      DependsOn: CmsWebhookLambdaFunction
+

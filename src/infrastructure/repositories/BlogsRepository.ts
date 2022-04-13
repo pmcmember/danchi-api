@@ -11,7 +11,11 @@ export class BlogsRepositoryImpl implements BlogsRepository {
     readonly API_ID = "blogs";
     readonly ENDPOINT_BASE = `${process.env.MICROCMS_API_BASEURL}/${this.API_ID}`
 
-    constructor() {}
+    constructor() {
+        if( ! process.env.MICROCMS_API_BASEURL) {
+            throw new Error("Error: BlogsRepositoryImpl: process.env.MICROCMS_API_BASEURL is undefined.");
+        }
+    }
 
     public fetchList = async () => {
         try {

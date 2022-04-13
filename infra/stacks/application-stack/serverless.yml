@@ -40,14 +40,19 @@ provider:
 # S3バケットにデプロイするzipファイルに含めるファイル群を指定
 package:
   individually: true
+  excludeDevDependencies: true
   exclude:
     - node_modules/**
     - __test__/**
     - .env/**
     - bin/**
+    - src/**
     - LambdaLayer/**
     - stacks/**
     - vscode/**
+    - package.json
+    - package-lock.json
+    - yarn.lock
 
 layers:
   CommonLayer:
@@ -67,6 +72,14 @@ functions:
   ## ラムダ認証
   #=====================================#
   lambdaAuthorizer: ${file(${self:custom.paths.stacks.application}/config/functions/lambdaAuthorizer.yml):export}
+  #=====================================#
+  ## 曲のカテゴリCRUD
+  #=====================================#
+  songCategories: ${file(${self:custom.paths.stacks.application}/config/functions/songCategories.yml):export}
+  #=====================================#
+  ## CMS Webhook対応用関数
+  #=====================================#
+  cmsWebhook: ${file(${self:custom.paths.stacks.application}/config/functions/cmsWebhook.yml):export}
 resources:
   - ${file(${self:custom.paths.stacks.application}/config/resources/APIGateway.yml):export}
   - ${file(${self:custom.paths.stacks.application}/config/resources/LambdaPermission.yml):export}

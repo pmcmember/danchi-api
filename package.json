@@ -16,7 +16,8 @@
     "doc:stop": "ts-node bin/openapiUtil.ts stop ./docker-compose.openapi.yml",
     "doc:quit": "ts-node bin/openapiUtil.ts quit ./docker-compose.openapi.yml",
     "doc:restart": "npm run doc:stop && npm run doc:start",
-    "readme:link": "doctoc README.md --github"
+    "readme:link": "doctoc README.md --github",
+    "layer:create": "cd ./LambdaLayer/nodejs && npm install && cd ../ && zip -r ./nodejs.zip ./nodejs > /dev/null && echo 'success'"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.17",
@@ -34,12 +35,12 @@
     "ts-node": "^8.10.2",
     "typescript": "^3.2.4",
     "webpack": "^5.55.1",
-    "webpack-node-externals": "^1.7.2"
-  },
-  "dependencies": {
+    "webpack-node-externals": "^1.7.2",
     "@types/jsdom": "^16.2.14",
     "axios": "^0.26.1",
     "jsdom": "^19.0.0",
     "node-fetch": "^3.2.3"
+  },
+  "dependencies": {
   }
 }

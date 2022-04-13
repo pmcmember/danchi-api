@@ -102,7 +102,6 @@ export:
       DependsOn:
         - EnableWriteLogPolicy
         - SendNoticePolicy
-        - OperationAllTableOwnedByAppPolicy
       Properties:
         RoleName: ${self:custom.servicePrefix.IAM-Role}-IframeConverterLambda
         Path: /${self:app}/
@@ -128,6 +127,74 @@ export:
           - Key: STAGE
             Value: ${self:provider.stage}
 
+    #=====================================#
+    ## 曲カテゴリ操作 Lambda用ロール
+    #=====================================#
+    SongCategoriesLambdaRole:
+      Type: AWS::IAM::Role
+      DependsOn:
+        - EnableWriteLogPolicy
+        - SendNoticePolicy
+        - OperationAllTableOwnedByAppPolicy
+      Properties:
+        RoleName: ${self:custom.servicePrefix.IAM-Role}-SongCategoriesLambda
+        Path: /${self:app}/
+        ManagedPolicyArns:
+          - !Ref EnableWriteLogPolicy
+          - !Ref SendNoticePolicy
+          - !Ref OperationAllTableOwnedByAppPolicy
+        AssumeRolePolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service:
+                  - lambda.amazonaws.com
+              Action: sts:AssumeRole
+        Tags:
+          - Key: Name
+            Value: ${self:custom.servicePrefix.IAM-Role}-SongCategoriesLambda
+          - Key: Project
+            Value: ${self:custom.project}
+          - Key: App
+            Value: ${self:app}
+          - Key: STAGE
+            Value: ${self:provider.stage}
+
+    #=====================================#
+    ## CMS Webhook Lambda用ロール
+    #=====================================#
+    CmsWebhookLambdaRole:
+      Type: AWS::IAM::Role
+      DependsOn:
+        - EnableWriteLogPolicy
+        - SendNoticePolicy
+        - LambdaInvokePolicy
+      Properties:
+        RoleName: ${self:custom.servicePrefix.IAM-Role}-CmsWebhookLambda
+        Path: /${self:app}/
+        ManagedPolicyArns:
+          - !Ref EnableWriteLogPolicy
+          - !Ref SendNoticePolicy
+          - !Ref LambdaInvokePolicy
+        AssumeRolePolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service:
+                  - lambda.amazonaws.com
+              Action: sts:AssumeRole
+        Tags:
+          - Key: Name
+            Value: ${self:custom.servicePrefix.IAM-Role}-CmsWebhookLambda
+          - Key: Project
+            Value: ${self:custom.project}
+          - Key: App
+            Value: ${self:app}
+          - Key: STAGE
+            Value: ${self:provider.stage}
+
 
   Outputs:
     StandardLambdaRoleArn:
@@ -146,3 +213,11 @@ export:
       Value: !GetAtt IframeConverterLambdaRole.Arn
       Export:
         Name: ${self:provider.stackName}-IframeConverterLambdaRoleArn
+    SongCategoriesLambdaRoleArn:
+      Value: !GetAtt SongCategoriesLambdaRole.Arn
+      Export:
+        Name: ${self:provider.stackName}-SongCategoriesLambdaRoleArn
+    CmsWebhookLambdaRoleArn:
+      Value: !GetAtt CmsWebhookLambdaRole.Arn
+      Export:
+        Name: ${self:provider.stackName}-CmsWebhookLambdaRoleArn

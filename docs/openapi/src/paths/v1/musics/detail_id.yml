@@ -1,6 +1,6 @@
 get:
-  summary: "曲一覧の取得"
-  description: "MicroCMSに登録されている曲一覧の取得"
+  summary: "曲の取得"
+  description: "MicroCMSに登録されている曲の取得"
   tags:
     - musics
   security:
@@ -22,30 +22,18 @@ get:
     httpMethod: "POST"
     contentHandling: "CONVERT_TO_TEXT"
   parameters:
-    - in: query
-      name: limit
-      description: "取得したい件数の上限を指定する。レスポンスサイズが5MBを超えるとエラーが発生する。"
-      required: false
-      schema:
-        type: integer
-    - in: query
-      name: offset
-      description: "何件目から取得するかを指定する。"
-      required: false
-      schema:
-        type: integer
-    - in: query
-      name: orders
-      description: "取得したいデータの並び替えを行う。\n参考 : https://document.microcms.io/content-api/get-list-contents#hf1af2f632c"
-      required: false
+    - in: path
+      name: id
+      description: "BlogのIDを指定"
+      required: true
       schema:
         type: string
-    - in: query
-      name: filters
-      description: "取得したいデータの条件を指定する。\n参考 : https://document.microcms.io/content-api/get-list-contents#hdebbdc8e86"
-      required: false
-      schema:
-        type: string
+  #   - in: query
+  #     name: getType
+  #     required: false
+  #     description: "MicroCMS APIと同様のクエリパラメータを使用します。"
+  #     schema:
+  #       $ref: "../../../openapi.yml#/components/schemas/MicroCMSQueries"
   responses:
     200:
       description: "成功時のレスポンス"
@@ -62,14 +50,13 @@ get:
       content:
         application/json:
           schema:
-            $ref: "../../../openapi.yml#/components/schemas/MusicsResultList"
+            $ref: "../../../openapi.yml#/components/schemas/MusicsResult"
     500:
       description: "サーバ異常終了時のレスポンス"
       content:
         application/json:
           schema:
             $ref: "../../../openapi.yml#/components/schemas/StandardResponse"
-
 options:
   summary: "APIGateway上のCORS用設定"
   description: "APIGateway上のCORS用設定"

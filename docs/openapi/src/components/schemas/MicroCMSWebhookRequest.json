@@ -34,84 +34,142 @@
             "type": "string"
         },
         "contents": {
-            "properties": {
-                "new": {
+            "anyOf": [
+                {
                     "properties": {
-                        "draftKey": {
-                            "type": "string"
+                        "new": {
+                            "anyOf": [
+                                {
+                                    "properties": {
+                                        "draftKey": {
+                                            "type": [
+                                                "null",
+                                                "string"
+                                            ]
+                                        },
+                                        "draftValue": {
+                                            "anyOf": [
+                                                {
+                                                    "$ref": "#/definitions/T"
+                                                },
+                                                {
+                                                    "type": "null"
+                                                }
+                                            ]
+                                        },
+                                        "id": {
+                                            "type": "string"
+                                        },
+                                        "publishValue": {
+                                            "anyOf": [
+                                                {
+                                                    "$ref": "#/definitions/T"
+                                                },
+                                                {
+                                                    "type": "null"
+                                                }
+                                            ]
+                                        },
+                                        "status": {
+                                            "items": {
+                                                "enum": [
+                                                    "DRAFT",
+                                                    "PUBLISH"
+                                                ],
+                                                "type": "string"
+                                            },
+                                            "type": "array"
+                                        }
+                                    },
+                                    "required": [
+                                        "draftKey",
+                                        "draftValue",
+                                        "id",
+                                        "publishValue",
+                                        "status"
+                                    ],
+                                    "type": "object"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ]
                         },
-                        "draftValue": {
-                            "$ref": "#/definitions/T"
-                        },
-                        "id": {
-                            "type": "string"
-                        },
-                        "publishValue": {
-                            "$ref": "#/definitions/T"
-                        },
-                        "status": {
-                            "items": {
-                                "enum": [
-                                    "DRAFT",
-                                    "PUBLISH"
-                                ],
-                                "type": "string"
-                            },
-                            "type": "array"
+                        "old": {
+                            "anyOf": [
+                                {
+                                    "properties": {
+                                        "draftKey": {
+                                            "type": [
+                                                "null",
+                                                "string"
+                                            ]
+                                        },
+                                        "draftValue": {
+                                            "anyOf": [
+                                                {
+                                                    "$ref": "#/definitions/T"
+                                                },
+                                                {
+                                                    "type": "null"
+                                                }
+                                            ]
+                                        },
+                                        "id": {
+                                            "type": "string"
+                                        },
+                                        "publishValue": {
+                                            "anyOf": [
+                                                {
+                                                    "$ref": "#/definitions/T"
+                                                },
+                                                {
+                                                    "type": "null"
+                                                }
+                                            ]
+                                        },
+                                        "status": {
+                                            "items": {
+                                                "enum": [
+                                                    "DRAFT",
+                                                    "PUBLISH"
+                                                ],
+                                                "type": "string"
+                                            },
+                                            "type": "array"
+                                        }
+                                    },
+                                    "required": [
+                                        "draftKey",
+                                        "draftValue",
+                                        "id",
+                                        "publishValue",
+                                        "status"
+                                    ],
+                                    "type": "object"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ]
                         }
                     },
                     "required": [
-                        "draftKey",
-                        "draftValue",
-                        "id",
-                        "publishValue",
-                        "status"
+                        "new",
+                        "old"
                     ],
                     "type": "object"
                 },
-                "old": {
-                    "properties": {
-                        "draftKey": {
-                            "type": "string"
-                        },
-                        "draftValue": {
-                            "$ref": "#/definitions/T"
-                        },
-                        "id": {
-                            "type": "string"
-                        },
-                        "publishValue": {
-                            "$ref": "#/definitions/T"
-                        },
-                        "status": {
-                            "items": {
-                                "enum": [
-                                    "DRAFT",
-                                    "PUBLISH"
-                                ],
-                                "type": "string"
-                            },
-                            "type": "array"
-                        }
-                    },
-                    "required": [
-                        "draftKey",
-                        "draftValue",
-                        "id",
-                        "publishValue",
-                        "status"
-                    ],
-                    "type": "object"
+                {
+                    "type": "null"
                 }
-            },
-            "required": [
-                "new",
-                "old"
-            ],
-            "type": "object"
+            ]
         },
         "id": {
-            "type": "string"
+            "type": [
+                "null",
+                "string"
+            ]
         },
         "service": {
             "type": "string"

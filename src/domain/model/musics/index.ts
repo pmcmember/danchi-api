@@ -1,4 +1,5 @@
 export * from "./MusicsResult"
 export * from "./MusicsResultList"
 export * from "./MusicsSchema"
-export * from './MusicsIframeConverterRequest'
+export * from './MusicsCmsWebhookRequest'
+export * from './MusicsSongCategories'

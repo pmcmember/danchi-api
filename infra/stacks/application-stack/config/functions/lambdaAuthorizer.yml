@@ -1,5 +1,5 @@
 export:
-  handler: src/handlers/lambdaAuthorizerHandler.main
+  handler: src/handlers/common/lambdaAuthorizerHandler.main
   package:
     include:
       - lambdaAuthorizerHandler.js

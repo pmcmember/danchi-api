@@ -1,0 +1,23 @@
+export:
+  handler: src/handlers/musics/cmsWebhook.main
+  package:
+    include:
+      - cmsWebhook.js
+  role: !ImportValue ${self:custom.stacks.common-stack.name}-CmsWebhookLambdaRoleArn
+  environment:
+    ALLOW_ORIGIN: ${file(${self:custom.paths.envFile}):export.ALLOW_ORIGIN}
+    SEND_ERROR_NOTICE_SNS_TOPIC_ARN: !ImportValue ${self:custom.stacks.common-stack.name}-SendErrorNoticeToEmailSNSTopicArn
+    IFRAME_CONVERTER_LAMBDA_NAME: ${self:functions.iframeConverter.name}
+    SONG_CATEGORIES_LAMBDA_NAME: ${self:functions.songCategories.name}
+    MICROCMS_API_KEY: ${file(${self:custom.paths.envFile}):export.MICROCMS_API_KEY}
+    MICROCMS_API_BASEURL: ${file(${self:custom.paths.envFile}):export.MICROCMS_API_BASEURL}
+    API_KEY: ${file(${self:custom.paths.envFile}):export.APIKEY_FREE_VALUE}
+    AUTHORIZATION_KEY: ${file(${self:custom.paths.envFile}):export.AUTHORIZATION_KEY}
+  name: ${self:custom.servicePrefix.Lambda}-cmsWebhook
+  layers:
+    - !Ref CommonLayerLambdaLayer
+  tags:
+    Project: ${self:custom.project}
+    Name: ${self:functions.cmsWebhook.name}
+    App: ${self:app}
+  memorySize: 1024

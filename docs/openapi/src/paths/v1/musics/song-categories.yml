@@ -1,0 +1,194 @@
+get:
+  summary: "曲カテゴリ一覧の取得"
+  description: "曲カテゴリ一覧の取得を行う。"
+  tags:
+    - musics
+  security:
+    - lambdaAuthorizer: []
+    - apiKey: []
+  x-amazon-apigateway-request-validator: basic
+  x-amazon-apigateway-integration:
+    type: aws_proxy
+    credentials:
+      Fn::ImportValue: ${self:custom.stacks.common-stack.name}-APIGWStandardRoleArn
+    uri:
+      Fn::Join:
+        - "/"
+        - - "arn:aws:apigateway:${self:provider.region}:lambda:path/2015-03-31/functions"
+          -
+            Fn::GetAtt: SongCategoriesLambdaFunction.Arn
+          - "invocations"
+    passthroughBehavior: "when_no_match"
+    httpMethod: "POST"
+    contentHandling: "CONVERT_TO_TEXT"
+  responses:
+    200:
+      description: "成功時のレスポンス"
+      headers:
+        Access-Control-Allow-Origin:
+          schema:
+            type: "string"
+        Access-Control-Allow-Methods:
+          schema:
+            type: "string"
+        Access-Control-Allow-Headers:
+          schema:
+            type: "string"
+      content:
+        application/json:
+          schema:
+            $ref: "../../../openapi.yml#/components/schemas/MusicsSongCategories"
+    500:
+      description: "サーバ異常終了時のレスポンス"
+      content:
+        application/json:
+          schema:
+            $ref: "../../../openapi.yml#/components/schemas/StandardResponse"
+
+post:
+  summary: "曲カテゴリの追加"
+  description: "曲カテゴリの追加を行う。"
+  tags:
+    - musics
+  security:
+    - lambdaAuthorizer: []
+    - apiKey: []
+  x-amazon-apigateway-request-validator: basic
+  x-amazon-apigateway-integration:
+    type: aws_proxy
+    credentials:
+      Fn::ImportValue: ${self:custom.stacks.common-stack.name}-APIGWStandardRoleArn
+    uri:
+      Fn::Join:
+        - "/"
+        - - "arn:aws:apigateway:${self:provider.region}:lambda:path/2015-03-31/functions"
+          -
+            Fn::GetAtt: SongCategoriesLambdaFunction.Arn
+          - "invocations"
+    passthroughBehavior: "when_no_match"
+    httpMethod: "POST"
+    contentHandling: "CONVERT_TO_TEXT"
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: "../../../openapi.yml#/components/schemas/MusicsSongCategories"
+  responses:
+    200:
+      description: "成功時のレスポンス"
+      headers:
+        Access-Control-Allow-Origin:
+          schema:
+            type: "string"
+        Access-Control-Allow-Methods:
+          schema:
+            type: "string"
+        Access-Control-Allow-Headers:
+          schema:
+            type: "string"
+      content:
+        application/json:
+          schema:
+            $ref: "../../../openapi.yml#/components/schemas/MusicsSongCategories"
+    500:
+      description: "サーバ異常終了時のレスポンス"
+      content:
+        application/json:
+          schema:
+            $ref: "../../../openapi.yml#/components/schemas/StandardResponse"
+
+delete:
+  summary: "曲カテゴリの削除"
+  description: "曲カテゴリの削除を行う。"
+  tags:
+    - musics
+  security:
+    - lambdaAuthorizer: []
+    - apiKey: []
+  x-amazon-apigateway-request-validator: basic
+  x-amazon-apigateway-integration:
+    type: aws_proxy
+    credentials:
+      Fn::ImportValue: ${self:custom.stacks.common-stack.name}-APIGWStandardRoleArn
+    uri:
+      Fn::Join:
+        - "/"
+        - - "arn:aws:apigateway:${self:provider.region}:lambda:path/2015-03-31/functions"
+          -
+            Fn::GetAtt: SongCategoriesLambdaFunction.Arn
+          - "invocations"
+    passthroughBehavior: "when_no_match"
+    httpMethod: "POST"
+    contentHandling: "CONVERT_TO_TEXT"
+  parameters:
+    - in: query
+      name: name
+      required: true
+      description: "削除するカテゴリの名前を指定する。カンマ区切りで複数指定可能"
+      schema:
+        type: string
+      examples:
+        oneId:
+          summary: 単一指定例
+          value: "壮大"
+        multipleIds:
+          summary: 複数指定例
+          value: "壮大,かっこいい,癒やし"
+  responses:
+    200:
+      description: "成功時のレスポンス"
+      headers:
+        Access-Control-Allow-Origin:
+          schema:
+            type: "string"
+        Access-Control-Allow-Methods:
+          schema:
+            type: "string"
+        Access-Control-Allow-Headers:
+          schema:
+            type: "string"
+      content:
+        application/json:
+          schema:
+            $ref: "../../../openapi.yml#/components/schemas/MusicsSongCategories"
+    500:
+      description: "サーバ異常終了時のレスポンス"
+      content:
+        application/json:
+          schema:
+            $ref: "../../../openapi.yml#/components/schemas/StandardResponse"
+
+options:
+  summary: "APIGateway上のCORS用設定"
+  description: "APIGateway上のCORS用設定"
+  tags:
+    - musics
+  responses:
+    200:
+      description: "200 response"
+      headers:
+        Access-Control-Allow-Origin:
+          schema:
+            type: "string"
+        Access-Control-Allow-Methods:
+          schema:
+            type: "string"
+        Access-Control-Allow-Headers:
+          schema:
+            type: "string"
+      content: {}
+  x-amazon-apigateway-integration:
+    responses:
+      default:
+        statusCode: "200"
+        responseParameters:
+          method.response.header.Access-Control-Allow-Methods: "'OPTIONS,GET'"
+          method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'"
+          method.response.header.Access-Control-Allow-Origin: "'${file(${self:custom.paths.envFile}):export.ALLOW_ORIGIN}'"
+        responseTemplates:
+          application/json: ""
+    requestTemplates:
+      application/json: "{statusCode:200}"
+    passthroughBehavior: "when_no_match"
+    contentHandling: "CONVERT_TO_TEXT"
+    type: "mock"
