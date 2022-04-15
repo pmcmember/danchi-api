@@ -36,7 +36,19 @@ get:
         type: integer
     - in: query
       name: orders
-      description: "取得したいデータの並び替えを行う。\n参考 : https://document.microcms.io/content-api/get-list-contents#hf1af2f632c"
+      description: "指標となるデータを指定し、それをもとに要素の並び替えを行う。デフォルトで昇順、プレフィックスに「-」をつけることで降順となる。\n参考 : https://document.microcms.io/content-api/get-list-contents#hf1af2f632c"
+      required: false
+      schema:
+        type: string
+    - in: query
+      name: fields
+      description: "コンテンツの中で取得したい要素を指定する。複数指定したい場合はカンマ区切りで指定する。"
+      required: false
+      schema:
+        type: string
+    - in: query
+      name: ids
+      description: "取得したいコンテンツのIDを指定する。複数指定したい場合はカンマ区切りで指定する。"
       required: false
       schema:
         type: string
@@ -95,7 +107,7 @@ options:
         statusCode: "200"
         responseParameters:
           method.response.header.Access-Control-Allow-Methods: "'OPTIONS,GET'"
-          method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'"
+          method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,X-Custom-Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'"
           method.response.header.Access-Control-Allow-Origin: "'${file(${self:custom.paths.envFile}):export.ALLOW_ORIGIN}'"
         responseTemplates:
           application/json: ""

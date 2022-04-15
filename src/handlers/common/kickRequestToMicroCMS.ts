@@ -24,6 +24,7 @@ export const main: APIGatewayProxyHandler = async (
         const apiId = event.path.split("/")[2];
         const id = event.pathParameters?.id;
 
+        console.log(JSON.stringify(event));
         switch(apiId) {
             case "musics": {
                 // TODO: DIコンテナ導入検討(パフォーマンスに問題なければ)
@@ -32,7 +33,7 @@ export const main: APIGatewayProxyHandler = async (
                 const result = id ?
                     await repository.fetch(event.pathParameters?.id || "")
                 :
-                    await repository.fetchList()
+                    await repository.fetchList(event.queryStringParameters || {})
                 
                 if(result.isSuccess()) {
                     return responseBuilder(200, result.data)
@@ -46,7 +47,7 @@ export const main: APIGatewayProxyHandler = async (
                 const result = id ?
                     await repository.fetch(event.pathParameters?.id || "")
                 :
-                    await repository.fetchList()
+                    await repository.fetchList(event.queryStringParameters || {})
                 
                 if(result.isSuccess()) {
                     return responseBuilder(200, result.data)

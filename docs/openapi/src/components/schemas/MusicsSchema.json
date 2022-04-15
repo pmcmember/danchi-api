@@ -14,6 +14,9 @@
         "scArtistName": {
             "type": "string"
         },
+        "scSongDescription": {
+            "type": "string"
+        },
         "scSongHref": {
             "type": "string"
         },
@@ -21,6 +24,9 @@
             "type": "string"
         },
         "scSrc": {
+            "type": "string"
+        },
+        "scThumbnailSrc": {
             "type": "string"
         },
         "songCategories": {

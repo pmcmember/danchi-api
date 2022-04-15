@@ -15,7 +15,7 @@ import container from '@/containers/repositories/MusicsRepository';
 import AWS from 'aws-sdk'
 import { Base64Util } from '@/utilities/Base64Util';
 import { Failure, Success } from '@/utilities/Result';
-import { MusicsSongCategories } from '@/domain/model/musics';
+import { MusicsSongCategories, OEmbedAPIResponse } from '@/domain/model/musics';
 import axios from 'axios';
 
 
@@ -59,17 +59,18 @@ export const main: APIGatewayProxyHandler = async (
         
         if(ObjectUtil.isDifference(newSchema, oldSchema)) {
             
-            // iframe変換 & MicroCMSデータアップデート
-            const iframeResult = await (async () => {
+            /**
+             * iframe変換
+             */
+            const iframeResult = await (async (musicsSchema: MusicsSchema) => {
                 try {
                     if( ! process.env.IFRAME_CONVERTER_LAMBDA_NAME) {
-                        return new Failure(new Error("Error: process.env.IFRAME_CONVERTER_LAMBDA_NAME is undefined."))
+                        throw new Error("Error: process.env.IFRAME_CONVERTER_LAMBDA_NAME is undefined.")
                     }
                     
                     const iframeConvertInvokeResult = await invokeLambda<MusicsSchema, APIGatewayProxyResult>(
                         process.env.IFRAME_CONVERTER_LAMBDA_NAME,
-                        newSchema,
-                        context
+                        musicsSchema
                     )
         
                     if(iframeConvertInvokeResult.statusCode >= 400) {
@@ -81,21 +82,88 @@ export const main: APIGatewayProxyHandler = async (
                     
                     const iframeConvertResult: MusicsSchema = JSON.parse(iframeConvertInvokeResult.data.body)
                     
-                    const repository = container.MusicsRepository;
-                    const result = await repository.update(data.id!, iframeConvertResult);
+                    return new Success(iframeConvertResult)
 
-                    return result
                 } catch(e) {
                     return new Failure(e as Error);
                 }
-            })()
-            
+            })(newSchema)
+
             if(iframeResult.isFailure()) {
-                console.error("Update MicroCMS musics data is failed.")
+                console.error("Convert iframe contents is failed.");
                 console.error(JSON.stringify(iframeResult.data))
                 
                 throw iframeResult.data
             }
+
+            /**
+             *  oEmbedからデータフェッチしてサムネイルURL・曲の説明を取得する
+             */
+            const oEmbedFetchResult = await (async (scSongHref: string | undefined) => {
+                try {
+                    if( ! scSongHref) {
+                        throw new Error("Error: convertIframe is failed because MusicSchema['scSongHref'] is undefined.");
+                    }
+    
+                    const fetchOEmbed = async (scSongHref: string): Promise<OEmbedAPIResponse> => {
+                        const res = await axios({
+                            method: "get",
+                            url: `https://soundcloud.com/oembed?url=${scSongHref}&format=json`,
+                        })
+                    
+                        const oEmbedFetchResult: OEmbedAPIResponse = res.data;
+                    
+                        return oEmbedFetchResult
+                    }
+    
+    
+                    const oEmbedFetchResult = await fetchOEmbed(scSongHref);
+    
+                    
+                    return new Success(oEmbedFetchResult);
+                } catch(e) {
+                    return new Failure(e as Error)
+                }
+            })(iframeResult.data.scSongHref)
+            
+            if(oEmbedFetchResult.isFailure()) {
+                console.error(" is failed.");
+                console.error(JSON.stringify(oEmbedFetchResult.data))
+                
+                throw oEmbedFetchResult.data
+            }
+
+            
+            /**
+             * iframeResultとoEmbedFetchResultをマージしたデータをMicroCMSアップデートデータとする
+             */
+            const cmsUpdateData: MusicsSchema = {
+                ...iframeResult.data,
+                scSongDescription: oEmbedFetchResult.data.description,
+                scThumbnailSrc: oEmbedFetchResult.data.thumbnail_url
+            }
+
+            /**
+             * MicroCMSデータアップデート
+             */
+            const cmsUpdateResult = await (async (id: string, data: MusicsSchema) => {
+                try {
+                    const repository = container.MusicsRepository;
+                    const result = await repository.update(id, data);
+        
+                    return result
+                } catch(e) {
+                    return new Failure(e as Error)
+                }
+            })(data.id!, cmsUpdateData);
+            
+            if(cmsUpdateResult.isFailure()) {
+                console.error("Update MicroCMS musics data is failed.");
+                console.error(JSON.stringify(cmsUpdateResult.data))
+                
+                throw cmsUpdateResult.data
+            }
+
 
             if( ! newSchema.songCategories) {
                 const message = "musics update: OK.\nsongCategory update: Processing was skipped because the request did not exist."
@@ -104,8 +172,11 @@ export const main: APIGatewayProxyHandler = async (
                     message: message
                 })
             }
-            
-            const songCategoriesResult = await (async () => {
+        
+            /**
+             * カテゴリ一覧の更新
+             */
+            const songCategoriesResult = await (async (categories: MusicsSchema["songCategories"]) => {
                 if( ! process.env.SONG_CATEGORIES_LAMBDA_NAME) {
                     return new Failure(new Error("Error: process.env.SONG_CATEGORIES_LAMBDA_NAME is undefined."))
                 }
@@ -119,8 +190,7 @@ export const main: APIGatewayProxyHandler = async (
     
                     const result = await invokeLambda<MusicsSongCategories, APIGatewayProxyResult>(
                         process.env.SONG_CATEGORIES_LAMBDA_NAME,
-                        songCategories,
-                        context
+                        songCategories
                     )
 
                     return result.statusCode >= 400 ?
@@ -129,19 +199,20 @@ export const main: APIGatewayProxyHandler = async (
                 } catch(e) {
                     return new Failure(e as Error);
                 }
-            })()
+            })(cmsUpdateData.songCategories!)
 
             if(songCategoriesResult.isFailure()) {
                 console.error("Update song categories data is failed.");
                 console.error(JSON.stringify(songCategoriesResult.data));
 
                 throw iframeResult.data;
-            } else {
-                console.log("all ok.");
-                return responseBuilder(201, {
-                    message: "musics update: OK.\nsongCategory update: OK."
-                })
             }
+
+
+            console.log("all ok.");
+            return responseBuilder(201, {
+                message: "musics update: OK.\nsongCategory update: OK."
+            })
         } else {
             console.log("更新内容に変化がなかったため、MicroCMSにリクエストを送信しませんでした。")
             console.log("old", JSON.stringify(oldSchema))
@@ -156,8 +227,7 @@ export const main: APIGatewayProxyHandler = async (
 
 const invokeLambda = async <REQ, RES>(
     functionName: string,
-    request: REQ,
-    context: Context
+    request: REQ
 ): Promise<{data: RES, statusCode: number }> => {
     const event = {
         body: JSON.stringify(request),

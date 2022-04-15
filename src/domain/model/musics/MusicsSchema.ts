@@ -12,6 +12,8 @@ export type MusicsSchema = {
     scSongTitle?: string;
     scSongHref?: string;
     scApiUrl?: string;
+    scSongDescription?: string;
+    scThumbnailSrc?: string;
 }
 
 type SongCategory = {
