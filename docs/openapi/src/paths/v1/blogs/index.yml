@@ -94,7 +94,7 @@ options:
         statusCode: "200"
         responseParameters:
           method.response.header.Access-Control-Allow-Methods: "'OPTIONS,GET'"
-          method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'"
+          method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,X-Custom-Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'"
           method.response.header.Access-Control-Allow-Origin: "'${file(${self:custom.paths.envFile}):export.ALLOW_ORIGIN}'"
         responseTemplates:
           application/json: ""
