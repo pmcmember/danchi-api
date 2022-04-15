@@ -1,4 +1,4 @@
-import { BlogsRepository } from '@/domain/repositories/BlogsRepository';
+import { BlogsRepository, BlogsFetchListProps as FetchListProps } from '@/domain/repositories/BlogsRepository';
 import {
     BlogsSchema,
     BlogsResult,
@@ -17,13 +17,23 @@ export class BlogsRepositoryImpl implements BlogsRepository {
         }
     }
 
-    public fetchList = async () => {
+    private createQueryParams = (queries: FetchListProps) => {
+        const result = Object.keys(queries).reduce((pre, crr) => {
+            const _crr = crr as keyof FetchListProps
+            return pre + `?${crr}=${encodeURIComponent(queries[_crr] || "")}`
+        }, "");
+
+        return result;
+    }
+
+    public fetchList = async (props: FetchListProps) => {
         try {
             const endpoint = `${this.ENDPOINT_BASE}`
+            const queries = (this.createQueryParams(props))
 
             const res = await axios({
                 method: "get",
-                url: endpoint,
+                url: endpoint + queries,
                 headers: {
                     "Content-Type": "application/json",
                     "X-MICROCMS-API-KEY": process.env.MICROCMS_API_KEY || ""

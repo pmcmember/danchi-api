@@ -5,6 +5,15 @@ import {
 } from '@/domain/model/musics'
 import { Result } from '@/utilities/Result'
 
+export type MusicsFetchListProps = {
+    offset?: string;
+    limit?: string;
+    orders?: string;
+    fields?: string;
+    ids?: string;
+    filters?: string;
+}
+
 export interface MusicsRepository {
     readonly API_ID: "musics";
 
@@ -17,7 +26,7 @@ export interface MusicsRepository {
     /**
      * musicsデータのリストを取得する
      */
-    fetchList: () => Promise<Result<MusicsResultList, Error>>;
+    fetchList: (props: MusicsFetchListProps) => Promise<Result<MusicsResultList, Error>>;
     
     /**
      * musicsデータをupdateする
