@@ -11,22 +11,31 @@
     "remove:com": "serverless remove --config ./infra/stacks/common-stack/serverless.yml",
     "remove:app": "serverless remove --config ./infra/stacks/application-stack/serverless.yml",
     "remove:mnt": "serverless remove --config ./infra/stacks/monitor-stack/serverless.yml",
+    "info:com": "serverless info --config ./infra/stacks/common-stack/serverless.yml",
+    "info:app": "serverless info --config ./infra/stacks/application-stack/serverless.yml",
+    "info:mnt": "serverless info --config ./infra/stacks/monitor-stack/serverless.yml",
     "doc:start": "ts-node bin/openapiUtil.ts start ./docker-compose.openapi.yml",
     "doc:open": "ts-node bin/openapiUtil.ts open ./docker-compose.openapi.yml",
     "doc:stop": "ts-node bin/openapiUtil.ts stop ./docker-compose.openapi.yml",
     "doc:quit": "ts-node bin/openapiUtil.ts quit ./docker-compose.openapi.yml",
     "doc:restart": "npm run doc:stop && npm run doc:start",
     "readme:link": "doctoc README.md --github",
-    "layer:create": "cd ./LambdaLayer/nodejs && npm install && cd ../ && zip -r ./nodejs.zip ./nodejs > /dev/null && echo 'success'"
+    "layer:common": "cd ./LambdaLayer/CommonLayer/nodejs && npm install && echo 'success'",
+    "hostname:dev": "echo https://$(aws --profile danchi-sls apigateway get-rest-apis --query \"items[?(tags.App=='danchi-api' && tags.STAGE=='dev')].id\" --output text).execute-api.ap-northeast-1.amazonaws.com/dev",
+    "hostname:prd": "echo https://$(aws --profile danchi-sls apigateway get-rest-apis --query \"items[?(tags.App=='danchi-api' && tags.STAGE=='prd')].id\" --output text).execute-api.ap-northeast-1.amazonaws.com/prd"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.17",
     "@types/jest": "^27.0.2",
+    "@types/jsdom": "^16.2.14",
     "@types/node": "^10.12.18",
     "@types/serverless": "^1.78.35",
     "aws-sdk": "^2.817.0",
+    "axios": "^0.26.1",
+    "doctoc": "^2.1.0",
     "fork-ts-checker-webpack-plugin": "^6.3.4",
     "jest": "^27.2.1",
+    "jsdom": "^19.0.0",
     "microcms-js-sdk": "^2.0.0",
     "serverless": "^2.60.0",
     "serverless-webpack": "^5.5.4",
@@ -35,12 +44,7 @@
     "ts-node": "^8.10.2",
     "typescript": "^3.2.4",
     "webpack": "^5.55.1",
-    "webpack-node-externals": "^1.7.2",
-    "@types/jsdom": "^16.2.14",
-    "axios": "^0.26.1",
-    "jsdom": "^19.0.0",
-    "node-fetch": "^3.2.3"
+    "webpack-node-externals": "^1.7.2"
   },
-  "dependencies": {
-  }
+  "dependencies": {}
 }
