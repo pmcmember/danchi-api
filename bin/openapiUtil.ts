@@ -24,10 +24,9 @@ if( ! dockerComposePath || ! fs.existsSync(dockerComposePath)) {
 
 
 const getDockerUrl = () => {
-    if( ! process.env.DOCKER_HOST) {
-        throw new Error("[ERROR]DOCKER_HOST is undefined. Do you have run Docker?");
-    }
-    const dockerIp = process.env.DOCKER_HOST.split(":")[1].replace(/\//g, "");
+    const dockerIp = process.env.DOCKER_HOST
+        ? process.env.DOCKER_HOST.split(":")[1].replace(/\//g, "")
+        : "localhost"
     const url = `http://${dockerIp}`;
     
     return `${url}:${ports.view}`;
