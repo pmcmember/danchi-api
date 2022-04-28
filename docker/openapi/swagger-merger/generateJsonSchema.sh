@@ -59,8 +59,17 @@ while true; do
       fi
 
       jsonSchema="${DESTINATION_PATH}/$(basename $f | sed -e s/\.ts$/.json/)"
+      typeName="$(basename $f | cut -d. -f1)"
 
-      typescript-json-schema $f $(basename $f | cut -d. -f1) --required --strictNullChecks true > "${jsonSchema}"
+      typescript-json-schema $f $typeName --required --strictNullChecks true > "${jsonSchema}"
+
+      # 変更した型を呼び出している型に変更を反映させるため、変更した型をimportしているファイルを検索し、見つけたらJSON生成
+      for f2 in $(find $TARGET_PATH -type f -name "*.ts" | xargs grep -E "^import.*${typeName}.*from.*${typeName}" | cut -d: -f1); do
+        jsonSchema2="${DESTINATION_PATH}/$(basename $f2 | sed -e s/\.ts$/.json/)"
+        typeName2="$(basename $f2 | cut -d. -f1)"
+
+        typescript-json-schema $f2 $typeName2 --required --strictNullChecks true > "${jsonSchema2}"
+      done
     fi
   done
 
