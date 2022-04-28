@@ -1,7 +1,5 @@
 /**
  * musics APIのスキーマ
- * 
- * 注：songCategoriesは複数指定の場合改行区切りで指定される。
  */
 export type MusicsSchema = {
     rawIframe: string;

@@ -44,7 +44,7 @@
             "items": {
                 "allOf": [
                     {
-                        "description": "musics APIのスキーマ\n\n注：songCategoriesは複数指定の場合改行区切りで指定される。",
+                        "description": "musics APIのスキーマ",
                         "properties": {
                             "rawIframe": {
                                 "type": "string"

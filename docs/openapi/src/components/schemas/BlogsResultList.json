@@ -62,7 +62,7 @@
             "items": {
                 "allOf": [
                     {
-                        "description": "blogs APIのスキーマ\n\n注：tagsは複数指定の場合改行区切りで指定される。",
+                        "description": "blogs APIのスキーマ",
                         "properties": {
                             "author": {
                                 "items": {
