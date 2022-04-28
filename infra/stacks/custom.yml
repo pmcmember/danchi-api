@@ -3,7 +3,7 @@ export:
   default:
     stage: dev
     region: ap-northeast-1
-    profile: sls
+    profile: danchi-sls
   # API version(バージョン変更の際は下記を変更)
   apigateway:
     version:
