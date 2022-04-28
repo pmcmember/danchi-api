@@ -13,7 +13,7 @@ jspm_packages
 
 # Lambda Layer directories
 LambdaLayer/nodejs.zip
-LambdaLayer/nodejs/*
-!LambdaLayer/nodejs/package.json
+LambdaLayer/nodejs/**
+!LambdaLayer/nodejs/**/package.json
 
 .tmp*

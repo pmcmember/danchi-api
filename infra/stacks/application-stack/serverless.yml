@@ -57,7 +57,7 @@ package:
 layers:
   CommonLayer:
     name: ${self:custom.servicePrefix.Lambda-Layer}-common
-    path: LambdaLayer
+    path: LambdaLayers/CommonLayer
 
 functions:
   #=====================================#
