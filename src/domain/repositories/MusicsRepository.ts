@@ -3,7 +3,6 @@ import {
     MusicsResult,
     MusicsResultList
 } from '@/domain/model/musics'
-import { Result } from '@/utilities/Result'
 
 export type MusicsFetchListProps = {
     offset?: string;
@@ -21,17 +20,17 @@ export interface MusicsRepository {
      * musicsデータを取得する
      * @param id 取得したいデータのID
      */
-    fetch: (id: string) => Promise<Result<MusicsResult, Error>>;
+    fetch: (id: string) => Promise<MusicsResult>;
     
     /**
      * musicsデータのリストを取得する
      */
-    fetchList: (props: MusicsFetchListProps) => Promise<Result<MusicsResultList, Error>>;
+    fetchList: (props: MusicsFetchListProps) => Promise<MusicsResultList>;
     
     /**
      * musicsデータをupdateする
      * @param id updateしたいデータのID
      * @param data updateしたいデータ
      */
-    update: (id: string, data: MusicsSchema) => Promise<Result<{id: string}, Error>>;
+    update: (id: string, data: MusicsSchema) => Promise<{id: string}>;
 }

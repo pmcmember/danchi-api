@@ -3,7 +3,6 @@ import {
     BlogsResult,
     BlogsResultList
 } from '@/domain/model/blogs'
-import { Result } from '@/utilities/Result'
 
 export type BlogsFetchListProps = {
     offset?: string;
@@ -21,10 +20,10 @@ export interface BlogsRepository {
      * blogsデータを取得する
      * @param id 取得したいデータのID
      */
-    fetch: (id: string) => Promise<Result<BlogsResult, Error>>;
+    fetch: (id: string) => Promise<BlogsResult>;
     
     /**
      * blogsデータのリストを取得する
      */
-    fetchList: (props: BlogsFetchListProps) => Promise<Result<BlogsResultList, Error>>;
+    fetchList: (props: BlogsFetchListProps) => Promise<BlogsResultList>;
 }
