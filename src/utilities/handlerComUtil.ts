@@ -1,6 +1,7 @@
 import {
     Context,
-    APIGatewayProxyResult
+    APIGatewayProxyResult,
+    APIGatewayProxyHandler
 } from 'aws-lambda';
 import responseBuilder from '@/utilities/responseBuilder';
 import AWS from 'aws-sdk'
@@ -33,9 +34,9 @@ https://${region}.console.aws.amazon.com/cloudwatch/home?region=${region}#logsV2
 
 const handlerComUtil = async (
     context: Context,
-    mainCallback: () => Promise<APIGatewayProxyResult>
+    mainCallback: () => Promise<APIGatewayProxyResult | void>
 ): Promise<APIGatewayProxyResult> => {
-    let response: APIGatewayProxyResult;
+    let response: APIGatewayProxyResult | void;
 
     try {
         response = await mainCallback();
@@ -72,7 +73,7 @@ const handlerComUtil = async (
 
         response = responseBuilder(500, {message: "Can't Available Now"});
     }
-    return response;
+    return response? response : responseBuilder(200, {message: "OK"});
 }
 
 export default handlerComUtil

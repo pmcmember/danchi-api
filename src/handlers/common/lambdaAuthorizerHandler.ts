@@ -5,6 +5,9 @@ import {
     Context,
     Callback
 } from 'aws-lambda';
+import { Handler } from '../Handler';
+import { Singleton } from '@/decorators'
+import handlerComUtil from '@/utilities/handlerComUtil';
 
 
 /**
@@ -13,65 +16,59 @@ import {
  * @param _context 
  * @param _callback 
  */
+@Singleton
+export class LambdaAuthorizerHandler extends Handler {
+    handler: APIGatewayAuthorizerHandler = async (event, _context, _callback) => {
+        let response: APIGatewayAuthorizerResult;
+        
+        try {
+            const token = this.getTokenStoredInHeader(event);
 
-export const main: APIGatewayAuthorizerHandler = async (
-    event: APIGatewayAuthorizerEvent,
-    _context: Context,
-    _callback: Callback<APIGatewayAuthorizerResult>
-  ): Promise<APIGatewayAuthorizerResult> => {
-    let token: string | undefined;
-    let response: APIGatewayAuthorizerResult;
-
-    switch(event.type) {
-        case "REQUEST":
-            // "X-Custom-Authorization"キーの存在確認
-            // ツールによっては小文字に変換されてしまうため、大小関係なくキーを検索し、
-            // 条件に合ったキー名を取得する
-            const [result] = Object.keys(event.headers || {}).filter((key) => {
-                return key.toLowerCase() === "X-Custom-Authorization".toLowerCase()
-            })
-
-            token = event.headers?.[result]
-            break;
-        case "TOKEN":
-            token = event.authorizationToken
-            break;
-    }
-
+            // Authorizationヘッダーから取っている関係でbearer文字列があるため除去する
+            const tokenValue = token.replace(/^([b,B]earer|[b,B]asic) /, "")
+            
+            const effect = tokenValue === process.env.AUTHORIZATION_KEY? "Allow": "Deny";
     
-    try {
-        if( ! token) {
-            throw new Error(`[ERROR]No token was set. request type = ${event.type}`)
+            response = this.authorizerResponseBuilder(event, effect);
+        } catch(e) {
+            console.error(e);
+            response = this.authorizerResponseBuilder(event, "Deny");
         }
-        
-        // Authorizationヘッダーから取っている関係でbearer文字列があるため除去する
-        const tokenValue = token.replace(/^([b,B]earer|[b,B]asic) /, "")
-        
-        const effect = tokenValue === process.env.AUTHORIZATION_KEY? "Allow": "Deny";
-
-        response = authorizerResponseBuilder(event, effect);
-    } catch(e) {
-        console.error(e);
-        response = authorizerResponseBuilder(event, "Deny");
+    
+        return response;
     }
 
-    return response;
+    private getTokenStoredInHeader = (event: APIGatewayAuthorizerEvent): string => {
+        const authHeaderKey = "X-Custom-Authorization"
+        
+        switch(event.type) {
+            case "REQUEST":
+                // authHeaderKeyキーの存在確認
+                // ツールによっては小文字に変換されてしまうため、大小関係なくキーを検索し、
+                // 条件に合ったキー名を取得する
+                const result = Object.keys(event.headers || {}).find((key) => {
+                    return key.toLowerCase() === authHeaderKey.toLowerCase()
+                })
+    
+                if( ! result) {
+                    throw new Error("Error: Valid authentication header does not exist")
+                } else {
+                    return event.headers![result]!
+                }
+            case "TOKEN":
+                return event.authorizationToken
+        }
+    }
 }
 
 
 
-const authorizerResponseBuilder = (event: APIGatewayAuthorizerEvent, effect: "Allow" | "Deny"): APIGatewayAuthorizerResult => {
-    return {
-        "principalId": "*",
-        "policyDocument": {
-            "Version": "2012-10-17",
-            "Statement": [
-                {
-                    "Action": "execute-api:Invoke",
-                    "Effect": effect,
-                    "Resource": event.methodArn
-                }
-            ]
-        }
-    }
+export const main: APIGatewayAuthorizerHandler = async (
+    event,
+    context,
+    callback
+) => {
+    const handler = new LambdaAuthorizerHandler();
+    const response = await handler.handler(event, context, callback)!;
+    return response
 }
