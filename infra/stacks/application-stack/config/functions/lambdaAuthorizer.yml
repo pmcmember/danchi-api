@@ -1,8 +1,8 @@
 export:
-  handler: src/handlers/common/lambdaAuthorizerHandler.main
+  handler: src/handlers/common/LambdaAuthorizerHandler.main
   package:
     include:
-      - lambdaAuthorizerHandler.js
+      - LambdaAuthorizerHandler.js
   environment:
     AUTHORIZATION_KEY: ${file(${self:custom.paths.envFile}):export.AUTHORIZATION_KEY}
   name: ${self:custom.servicePrefix.Lambda}-lambdaAuthorizer

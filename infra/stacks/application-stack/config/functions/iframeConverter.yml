@@ -1,8 +1,8 @@
 export:
-  handler: src/handlers/musics/iframeConverter.main
+  handler: src/handlers/musics/IframeConverter.main
   package:
     include:
-      - iframeConverter.js
+      - IframeConverter.js
   role: !ImportValue ${self:custom.stacks.common-stack.name}-IframeConverterLambdaRoleArn
   environment:
     ALLOW_ORIGIN: ${file(${self:custom.paths.envFile}):export.ALLOW_ORIGIN}

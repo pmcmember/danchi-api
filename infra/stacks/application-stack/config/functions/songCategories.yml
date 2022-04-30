@@ -1,8 +1,8 @@
 export:
-  handler: src/handlers/musics/songCategories.main
+  handler: src/handlers/musics/SongCategories.main
   package:
     include:
-      - songCategories.js
+      - SongCategories.js
   role: !ImportValue ${self:custom.stacks.common-stack.name}-SongCategoriesLambdaRoleArn
   environment:
     ALLOW_ORIGIN: ${file(${self:custom.paths.envFile}):export.ALLOW_ORIGIN}

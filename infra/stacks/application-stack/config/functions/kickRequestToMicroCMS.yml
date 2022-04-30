@@ -1,8 +1,8 @@
 export:
-  handler: src/handlers/common/kickRequestToMicroCMS.main
+  handler: src/handlers/common/KickRequestToMicroCMS.main
   package:
     include:
-      - kickRequestToMicroCMS.js
+      - KickRequestToMicroCMS.js
   role: !ImportValue ${self:custom.stacks.common-stack.name}-StandardLambdaRoleArn
   environment:
     ALLOW_ORIGIN: ${file(${self:custom.paths.envFile}):export.ALLOW_ORIGIN}
