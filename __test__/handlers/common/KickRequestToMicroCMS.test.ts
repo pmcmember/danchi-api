@@ -1,11 +1,11 @@
-import { KickRequestToMicroCMSHandler } from "@/handlers/common/kickRequestToMicroCMS";
+import { KickRequestToMicroCMSHandler } from "@/handlers/common/KickRequestToMicroCMS";
 import {
     BlogsRepositoryMock,
     MusicsRepositoryMock
 } from '/__mock__/infrastructure/repositories'
 import {
-    createEvent,
-    createCallback,
+    createAgProxyEvent as createEvent,
+    createAgProxyCallback as createCallback,
     createContext
 } from '/__test__/__testUtils__';
 
@@ -23,22 +23,21 @@ handler.blogsRepository = blogsRepositoryMock;
 
 
 describe("正常系", () => {
+    test("シングルトンであるか", () => {
+        const handler1 = new KickRequestToMicroCMSHandler();
+        const handler2 = new KickRequestToMicroCMSHandler();
+
+        expect(handler1 === handler2).toBe(true);
+    })
+
     test("リクエストパス:/v1/musics、HTTPメソッド:GET", async () => {
         const event = createEvent({
             path: "/v1/musics",
             httpMethod: "GET"
         });
-        console.log(JSON.stringify(event));
         const result = await handler.handler(event, context, callback);
         
-        expect(result).toStrictEqual({
-            statusCode: 200,
-            headers: {
-                "Access-Control-Allow-Origin": process.env.ALLOW_ORIGIN || "",
-                "Access-Control-Allow-Headers": "Content-Type, Accept, Origin"
-            },
-            body: JSON.stringify(await musicsRepositoryMock.fetchList())
-        })
+        expect(result).toStrictEqual(handler.agProxyResponseBuilder(200, await musicsRepositoryMock.fetchList()))
     })
 
     test("リクエストパス:/v1/musics/{id}、HTTPメソッド:GET", async () => {
@@ -52,14 +51,7 @@ describe("正常系", () => {
         });
         const result = await handler.handler(event, context, callback);
         
-        expect(result).toStrictEqual({
-            statusCode: 200,
-            headers: {
-                "Access-Control-Allow-Origin": process.env.ALLOW_ORIGIN || "",
-                "Access-Control-Allow-Headers": "Content-Type, Accept, Origin"
-            },
-            body: JSON.stringify(await musicsRepositoryMock.fetch(id))
-        })
+        expect(result).toStrictEqual(handler.agProxyResponseBuilder(200, await musicsRepositoryMock.fetch(id)))
     })
 
     test("リクエストパス:/v1/blogs、HTTPメソッド:GET", async () => {
@@ -69,14 +61,7 @@ describe("正常系", () => {
         });
         const result = await handler.handler(event, context, callback);
         
-        expect(result).toStrictEqual({
-            statusCode: 200,
-            headers: {
-                "Access-Control-Allow-Origin": process.env.ALLOW_ORIGIN || "",
-                "Access-Control-Allow-Headers": "Content-Type, Accept, Origin"
-            },
-            body: JSON.stringify(await blogsRepositoryMock.fetchList())
-        })
+        expect(result).toStrictEqual(handler.agProxyResponseBuilder(200, await blogsRepositoryMock.fetchList()))
     })
 
     test("リクエストパス:/v1/blogs/{id}、HTTPメソッド:GET", async () => {
@@ -90,18 +75,11 @@ describe("正常系", () => {
         });
         const result = await handler.handler(event, context, callback);
         
-        expect(result).toStrictEqual({
-            statusCode: 200,
-            headers: {
-                "Access-Control-Allow-Origin": process.env.ALLOW_ORIGIN || "",
-                "Access-Control-Allow-Headers": "Content-Type, Accept, Origin"
-            },
-            body: JSON.stringify(await blogsRepositoryMock.fetch(id))
-        })
+        expect(result).toStrictEqual(handler.agProxyResponseBuilder(200, await blogsRepositoryMock.fetch(id)))
     })
 })
 
-describe("正常系", () => {
+describe("異常系", () => {
     test("musics、blogs用パス以外にアクセスすると400エラーが返ってくる", async () => {
         const event = createEvent({
             path: `/v1/test`,
@@ -109,16 +87,7 @@ describe("正常系", () => {
             httpMethod: "GET"
         })
         const result = await handler.handler(event, context, callback);
-
-        expect(result).toStrictEqual({
-            statusCode: 400,
-            headers: {
-                "Access-Control-Allow-Origin": process.env.ALLOW_ORIGIN || "",
-                "Access-Control-Allow-Headers": "Content-Type, Accept, Origin"
-            },
-            body: JSON.stringify({
-                message: `Error: invalid Request -> ${event.resource}`
-            })
-        })
+        
+        expect(result).toStrictEqual(handler.agProxyResponseBuilder(400, {message: `Error: invalid Request -> ${event.resource}`}))
     })
 })
