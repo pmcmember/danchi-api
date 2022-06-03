@@ -1,5 +1,9 @@
-import { APIGatewayProxyCallback } from "aws-lambda";
+import { APIGatewayAuthorizerCallback, APIGatewayProxyCallback } from "aws-lambda";
 
-export const createCallback = (): APIGatewayProxyCallback => {
+export const createAgProxyCallback = (): APIGatewayProxyCallback => {
+    return () => undefined;
+}
+
+export const createAgAuthorizerCallback = (): APIGatewayAuthorizerCallback => {
     return () => undefined;
 }

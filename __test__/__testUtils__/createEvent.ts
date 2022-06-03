@@ -1,8 +1,11 @@
 import {
-    APIGatewayProxyEvent
+    APIGatewayProxyEvent,
+    APIGatewayAuthorizerEvent,
+    APIGatewayTokenAuthorizerEvent,
+    APIGatewayRequestAuthorizerEvent
 } from 'aws-lambda'
 
-export const createEvent = (
+export const createAgProxyEvent = (
     custom?: Partial<APIGatewayProxyEvent>
 ) => {
     const event: APIGatewayProxyEvent = {
@@ -33,6 +36,32 @@ export const createEvent = (
         resource: "",
         ...custom
     }
+
+    return event;
+}
+
+export const createAgAuthorizerEvent = (
+    type: APIGatewayTokenAuthorizerEvent['type'] | APIGatewayRequestAuthorizerEvent['type'], 
+    custom?: Partial<APIGatewayAuthorizerEvent>
+) => {
+    const event: APIGatewayAuthorizerEvent = type === "TOKEN" ?
+        {
+            type: 'TOKEN',
+            methodArn: "",
+            authorizationToken: "",
+            ...custom
+        } as APIGatewayTokenAuthorizerEvent
+    :
+        {
+            type: 'REQUEST',
+            methodArn: "",
+            resource: "",
+            path: "",
+            httpMethod: "",
+            headers: null,
+            multiValueHeaders: null,
+            ...custom
+        } as APIGatewayRequestAuthorizerEvent
 
     return event;
 }
