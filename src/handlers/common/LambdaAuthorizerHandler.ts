@@ -1,13 +1,10 @@
 import {
     APIGatewayAuthorizerHandler,
     APIGatewayAuthorizerEvent,
-    APIGatewayAuthorizerResult,
-    Context,
-    Callback
+    APIGatewayAuthorizerResult
 } from 'aws-lambda';
 import { Handler } from '../Handler';
 import { Singleton } from '@/decorators'
-import handlerComUtil from '@/utilities/handlerComUtil';
 
 
 /**
@@ -18,36 +15,34 @@ import handlerComUtil from '@/utilities/handlerComUtil';
  */
 @Singleton
 export class LambdaAuthorizerHandler extends Handler {
+    private readonly authHeaderKey = "X-Custom-Authorization";
+
     handler: APIGatewayAuthorizerHandler = async (event, _context, _callback) => {
-        let response: APIGatewayAuthorizerResult;
-        
         try {
-            const token = this.getTokenStoredInHeader(event);
+            const token = this.getTokenStoredInEvent(event);
 
             // Authorizationヘッダーから取っている関係でbearer文字列があるため除去する
             const tokenValue = token.replace(/^([b,B]earer|[b,B]asic) /, "")
             
-            const effect = tokenValue === process.env.AUTHORIZATION_KEY? "Allow": "Deny";
+            const effect = tokenValue === process.env.AUTHORIZATION_KEY
+                ? "Allow"
+                : "Deny";
     
-            response = this.authorizerResponseBuilder(event, effect);
+            return this.agAuthorizerResponseBuilder(event, effect);
         } catch(e) {
             console.error(e);
-            response = this.authorizerResponseBuilder(event, "Deny");
+            return this.agAuthorizerResponseBuilder(event, "Deny");
         }
-    
-        return response;
     }
 
-    private getTokenStoredInHeader = (event: APIGatewayAuthorizerEvent): string => {
-        const authHeaderKey = "X-Custom-Authorization"
-        
+    private getTokenStoredInEvent = (event: APIGatewayAuthorizerEvent): string => {        
         switch(event.type) {
             case "REQUEST":
                 // authHeaderKeyキーの存在確認
                 // ツールによっては小文字に変換されてしまうため、大小関係なくキーを検索し、
                 // 条件に合ったキー名を取得する
                 const result = Object.keys(event.headers || {}).find((key) => {
-                    return key.toLowerCase() === authHeaderKey.toLowerCase()
+                    return key.toLowerCase() === this.authHeaderKey.toLowerCase()
                 })
     
                 if( ! result) {
@@ -59,6 +54,10 @@ export class LambdaAuthorizerHandler extends Handler {
                 return event.authorizationToken
         }
     }
+
+    public getAuthHeaderKey = () => {
+        return this.authHeaderKey
+    }
 }
 
 
@@ -69,6 +68,6 @@ export const main: APIGatewayAuthorizerHandler = async (
     callback
 ) => {
     const handler = new LambdaAuthorizerHandler();
-    const response = await handler.handler(event, context, callback)!;
-    return response
+    const response = await handler.handler(event, context, callback);
+    return response as APIGatewayAuthorizerResult
 }
