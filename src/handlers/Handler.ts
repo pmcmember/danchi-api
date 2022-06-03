@@ -5,7 +5,6 @@ import {
     APIGatewayAuthorizerEvent,
     APIGatewayAuthorizerResult
 } from 'aws-lambda';
-import responseBuilder from '@/utilities/responseBuilder';
 
 
 type BodyDataTypes<T extends {[key: string]: any} = {
@@ -15,7 +14,7 @@ type BodyDataTypes<T extends {[key: string]: any} = {
 export abstract class Handler {
     abstract handler: APIGatewayProxyHandler | APIGatewayAuthorizerHandler
     
-    protected proxyResponseBuilder = <T>(
+    public agProxyResponseBuilder = <T>(
         statusCode: number,
         data: BodyDataTypes<T>
     ): APIGatewayProxyResult => {
@@ -29,7 +28,7 @@ export abstract class Handler {
         }
     }
 
-    protected authorizerResponseBuilder = (
+    public agAuthorizerResponseBuilder = (
         event: APIGatewayAuthorizerEvent,
         effect: "Allow" | "Deny"
     ): APIGatewayAuthorizerResult => {
