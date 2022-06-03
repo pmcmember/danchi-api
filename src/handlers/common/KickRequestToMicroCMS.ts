@@ -43,7 +43,7 @@ export class KickRequestToMicroCMSHandler extends Handler {
                     event.queryStringParameters || undefined
                 );
 
-                response = this.proxyResponseBuilder(200, result);
+                response = this.agProxyResponseBuilder(200, result);
                 break;
             }
             case "blogs": {
@@ -52,11 +52,11 @@ export class KickRequestToMicroCMSHandler extends Handler {
                     event.queryStringParameters || undefined
                 );
 
-                response = this.proxyResponseBuilder(200, result);
+                response = this.agProxyResponseBuilder(200, result);
                 break;
             }
             default: {
-                response = this.proxyResponseBuilder(400, {
+                response = this.agProxyResponseBuilder(400, {
                     message: `Error: invalid Request -> ${event.resource}`
                 })
                 break;
@@ -77,10 +77,9 @@ export class KickRequestToMicroCMSHandler extends Handler {
         queryParams?: {[key: string]: any}
     ): Promise<MusicsResult | MusicsResultList> => {
         const repository = this.musicsRepository;
-        const result = id ?
-                await repository.fetch(id)
-            :
-                await repository.fetchList(queryParams || {})
+        const result = id
+            ? await repository.fetch(id)
+            : await repository.fetchList(queryParams || {})
             
         return result
     }
@@ -96,10 +95,9 @@ export class KickRequestToMicroCMSHandler extends Handler {
         queryParams?: {[key: string]: any}
     ): Promise<BlogsResult | BlogsResultList> => {
         const repository = this.blogsRepository;
-        const result = id ?
-                await repository.fetch(id)
-            :
-                await repository.fetchList(queryParams || {})
+        const result = id
+            ? await repository.fetch(id)
+            : await repository.fetchList(queryParams || {})
             
         return result;
     }
