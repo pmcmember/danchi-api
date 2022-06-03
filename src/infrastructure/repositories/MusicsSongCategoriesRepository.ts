@@ -1,5 +1,5 @@
 import { MusicsSongCategoriesRepository } from '@/domain/repositories/MusicsSongCategoriesRepository';
-import { MusicsSongCategories } from '@/domain/model/musics/MusicsSongCategories'
+import { MusicsSongCategoriesResultList } from '@/domain/model/musics'
 import { DocumentClient, WriteRequests, WriteRequest } from 'aws-sdk/clients/dynamodb';
 import { Singleton } from '@/decorators';
 
@@ -25,14 +25,14 @@ export class MusicsSongCategoriesRepositoryImpl implements MusicsSongCategoriesR
             TableName: this.DB_NAME
         }).promise();
 
-        return (result.Items || [{name: ""}]) as MusicsSongCategories
+        return (result.Items || [{name: ""}]) as MusicsSongCategoriesResultList
     }
     
     /**
      * カテゴリデータを追加する
      * @param data 追加したいデータ
      */
-    add = async (data: MusicsSongCategories) => {
+    add = async (data: MusicsSongCategoriesResultList) => {
         await this.db.batchWrite({
             RequestItems: {
                 [this.DB_NAME]: this.convertToBatchWriteItems(data, "PutRequest")
@@ -46,9 +46,9 @@ export class MusicsSongCategoriesRepositoryImpl implements MusicsSongCategoriesR
 
     /**
      * カテゴリデータを削除する
-     * @param data 追加したいデータ
+     * @param data 削除したいデータ
      */
-    delete = async (data: MusicsSongCategories) => {
+    delete = async (data: MusicsSongCategoriesResultList) => {
         await this.db.batchWrite({
             RequestItems: {
                 [this.DB_NAME]: this.convertToBatchWriteItems(data, "DeleteRequest")

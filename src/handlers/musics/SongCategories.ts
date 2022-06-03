@@ -1,9 +1,11 @@
 import {
-    APIGatewayProxyHandler,
+    APIGatewayProxyHandler, APIGatewayProxyResult,
 } from 'aws-lambda';
-import responseBuilder from '@/utilities/responseBuilder';
 import handlerComUtil from '@/utilities/handlerComUtil';
-import container from '@/containers/repositories/MusicsSongCategoriesRepository';
+import { MusicsSongCategoriesRepository } from '@/domain/repositories';
+import { MusicsSongCategoriesRepositoryImpl } from '@/infrastructure/repositories';
+import { Handler } from '../Handler';
+import { Singleton } from '@/decorators';
 
 
 
@@ -13,63 +15,60 @@ import container from '@/containers/repositories/MusicsSongCategoriesRepository'
  * @param context 
  * @param _callback 
  */
+@Singleton
+export class SongCategoriesHandler extends Handler {
+    musicsSongCategoriesRepository: MusicsSongCategoriesRepository = new MusicsSongCategoriesRepositoryImpl();
 
-export const main: APIGatewayProxyHandler = async (
-    event,
-    context,
-    _callback
-  ) => {
-    return await handlerComUtil(context, async() => {
-        const repository = container.MusicsSongCategoriesRepository;
+    handler: APIGatewayProxyHandler = async (event, _context, _callback) => {
+        const repository = this.musicsSongCategoriesRepository;
+        const httpMethod = event.httpMethod.toLowerCase();
 
-        switch(true) {
-            case /^get$/i.test(event.httpMethod): {
+        switch(httpMethod) {
+            case "get": {
                 const result = await repository.fetchList();
-
-                if(result.isSuccess()) {
-                    return responseBuilder(200, result.data);
-                } else {
-                    throw result.data
-                }
+        
+                return this.agProxyResponseBuilder(200, result);
             }
-            case /^post$/i.test(event.httpMethod): {
+            case "post": {
                 if( ! event.body) {
                     throw new Error("Error: event.body is empty.");
                 }
-
+        
                 const result = await repository.add(JSON.parse(event.body));
-
-                if(result.isSuccess()) {
-                    return responseBuilder(201, result.data);
-                } else {
-                    throw result.data
-                }
+        
+                return this.agProxyResponseBuilder(200, result);
             }
-            case /^delete$/i.test(event.httpMethod): {
-                if( ! event.queryStringParameters) {
-                    throw new Error("Error: event.queryStringParameters is empty.");
+            case "delete": {
+                if( ! event.queryStringParameters || ! event.queryStringParameters.name) {
+                    throw new Error("Error: In delete http method, the name query parameter is required");
                 }
-
-                if( ! event.queryStringParameters.name) {
-                    throw new Error("Error: event.queryStringParameters.name is empty.");
-                }
-
+                
                 const name = event.queryStringParameters.name;
                 const data = name.split(",").map((n) => ({
                     name: n
                 }))
-
+        
                 const result = await repository.delete(data);
-
-                if(result.isSuccess()) {
-                    return responseBuilder(200, result.data);
-                } else {
-                    throw result.data
-                }
+        
+                return this.agProxyResponseBuilder(200, result);
             }
-
-            default:
-                throw new Error(`Error: invalid Request -> ${event.httpMethod}`)
+        
+            default: {
+                return this.agProxyResponseBuilder(400, `Error: invalid Request -> ${httpMethod}`);
+            }
         }
+    }
+}
+
+
+export const main: APIGatewayProxyHandler = async (
+    event,
+    context,
+    callback
+  ) => {
+    return await handlerComUtil(context, async() => {
+        const handler = new SongCategoriesHandler();
+        const response = handler.handler(event, context, callback);
+        return response;
     })
 }

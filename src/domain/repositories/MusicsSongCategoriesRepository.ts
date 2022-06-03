@@ -1,4 +1,4 @@
-import { MusicsSongCategories } from '@/domain/model/musics'
+import { MusicsSongCategoriesResultList } from '@/domain/model/musics'
 
 export interface MusicsSongCategoriesRepository {
     readonly API_ID: "musics";
@@ -6,17 +6,17 @@ export interface MusicsSongCategoriesRepository {
     /**
      * カテゴリデータのリストを取得する
      */
-    fetchList: () => Promise<MusicsSongCategories>;
+    fetchList: () => Promise<MusicsSongCategoriesResultList>;
     
     /**
      * カテゴリデータを追加する
      * @param data 追加したいデータ
      */
-    add: (data: MusicsSongCategories) => Promise<MusicsSongCategories>;
+    add: (data: MusicsSongCategoriesResultList) => Promise<MusicsSongCategoriesResultList>;
 
     /**
      * カテゴリデータを削除する
      * @param data 追加したいデータ
      */
-    delete: (data: MusicsSongCategories) => Promise<MusicsSongCategories>;
+    delete: (data: MusicsSongCategoriesResultList) => Promise<MusicsSongCategoriesResultList>;
 }
