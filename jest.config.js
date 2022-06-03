@@ -5,7 +5,7 @@ module.exports = async() => ({
     "^.+\\.(ts|tsx)$": "ts-jest"
   },
   globals: {
-    "ts-jest": {
+    "ts-jest": {  
       "tsconfig": "tsconfig.json"
     }
   },
@@ -13,6 +13,7 @@ module.exports = async() => ({
     "**/__test__/**/*.+(ts|tsx|js)",
     "**/?(*.)+(spec|test).+(ts|tsx|js)"
   ],
+  testPathIgnorePatterns: ["<rootDir>/__test__/__testUtils__/"],
   moduleNameMapper: {
     "^@\/(.+)": "<rootDir>/src/$1",
     "^\/(.+)": "<rootDir>/$1"
